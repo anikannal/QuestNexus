@@ -35,21 +35,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Save the current game state for a user
   apiRouter.post("/game-state", async (req: Request, res: Response) => {
     try {
-      const { userId, gameStateData } = req.body;
+      const { userId, playerData, questProgress, currentScene } = req.body;
       
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
       
-      // Validate game state data against schema
-      try {
-        gameStateSchema.parse(gameStateData);
-      } catch (error) {
-        if (error instanceof ZodError) {
-          const validationError = fromZodError(error);
-          return res.status(400).json({ message: validationError.message });
-        }
-        throw error;
+      // Validate data if provided fully as a game state
+      if (!playerData || !questProgress || !currentScene) {
+        return res.status(400).json({ message: "Player data, quest progress, and current scene are required" });
       }
       
       // Convert to number if it's a string
@@ -63,16 +57,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const timestamp = new Date().toISOString();
       
       const savedState = await storage.saveGameState(userIdNum, {
-        playerData: gameStateData.player,
-        questProgress: gameStateData.quests,
-        currentScene: gameStateData.currentScene,
+        playerData,
+        questProgress,
+        currentScene,
         updatedAt: timestamp
       });
       
       return res.status(201).json(savedState);
     } catch (error) {
       console.error("Error saving game state:", error);
-      return res.status(500).json({ message: "Failed to save game state" });
+      return res.status(500).json({ message: "Failed to save game state", error: String(error) });
     }
   });
 

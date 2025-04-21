@@ -82,14 +82,25 @@ export class DatabaseStorage implements IStorage {
       // Update existing game state
       [result] = await db
         .update(gameStates)
-        .set(updatedState)
+        .set({
+          playerData: updatedState.playerData,
+          questProgress: updatedState.questProgress,
+          currentScene: updatedState.currentScene,
+          updatedAt: updatedState.updatedAt
+        })
         .where(eq(gameStates.userId, userId))
         .returning();
     } else {
       // Create new game state
       [result] = await db
         .insert(gameStates)
-        .values(updatedState)
+        .values({
+          userId: updatedState.userId,
+          playerData: updatedState.playerData,
+          questProgress: updatedState.questProgress,
+          currentScene: updatedState.currentScene,
+          updatedAt: updatedState.updatedAt
+        })
         .returning();
     }
     
