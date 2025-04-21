@@ -160,57 +160,56 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = (questId: number) => {
-    console.log("Starting quest from button:", questId);
-    
-    setGameState(prevState => {
-      if (!prevState) {
-        console.error("Cannot start quest: gameState is null");
-        return prevState;
-      }
-
-      const quest = quests.find(q => q.id === questId);
-      if (!quest) {
-        console.error("Cannot start quest: quest not found");
-        return prevState;
-      }
-
-      const newState = {
-        ...prevState,
-        quests: {
-          ...prevState.quests,
-          current: questId,
-          available: prevState.quests.available.map(q => ({
-            ...q,
-            status: q.id === questId ? "active" : q.status
-          }))
-        },
-        currentScene: {
-          type: "story",
-          id: quest.startingSceneId,
-          questId: questId,
-          currentPanel: 1,
-          totalPanels: 1
-        }
-      };
-
-      // Log the new state for debugging
-      console.log("New state in startQuest:", newState);
-
-      // Save to localStorage inside the state update
-      localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
-      
-      toast({
-        title: "Quest Started",
-        description: `You have begun: ${quest.title}`,
-        variant: "default"
-      });
-
-      setGameState((prevState) => {
-        console.log("Previous state:", prevState);
-        console.log("Updated state:", newState);
-        return newState;
-      });
+    const startQuest = async (questId: number) => {
+    const quest = gameState.quests.available.find((q) => q.id === questId);
+  
+    // Ensure the quest object is valid
+    if (!quest) {
+      console.error("Quest not found for questId:", questId);
+      return;
+    }
+  
+    console.log("Quest object:", quest);
+  
+    const newState = {
+      ...gameState,
+      quests: {
+        ...gameState.quests,
+        current: questId, // Set questId here
+        available: gameState.quests.available.map((q) => ({
+          ...q,
+          status: q.id === questId ? "active" : q.status,
+        })),
+      },
+      currentScene: {
+        type: "story",
+        id: quest.startingSceneId,
+        questId: questId, // Set questId here
+        currentPanel: 1,
+        totalPanels: 1,
+      },
+    };
+  
+    // Log the new state for debugging
+    console.log("New state in startQuest:", newState);
+    console.log("New questId in state:", newState.quests.current);
+    console.log("New questId in currentScene:", newState.currentScene.questId);
+  
+    // Save to localStorage
+    localStorage.setItem("percyJacksonGameState", JSON.stringify(newState));
+  
+    // Display a toast notification
+    toast({
+      title: "Quest Started",
+      description: `You have begun: ${quest.title}`,
+      variant: "default",
+    });
+  
+    // Update the game state
+    setGameState((prevState: GameStateData | null) => {
+      console.log("Previous state:", prevState);
+      console.log("Updated state:", newState);
+      return newState;
     });
   };
 
