@@ -200,22 +200,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setGameState(newState);
     localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
 
-      console.log("Quest started successfully. New state:", newState);
-      
-      toast({
-        title: "Quest Started",
-        description: `You have begun: ${quest.title}`,
-        variant: "default"
-      });
-
-    } catch (error) {
-      console.error("Error starting quest:", error);
-      toast({
-        title: "Error",
-        description: "Failed to start quest",
-        variant: "destructive"
-      });
-    }
+    console.log("Quest started successfully. New state:", newState);
+    
+    toast({
+      title: "Quest Started",
+      description: `You have begun: ${quest.title}`,
+      variant: "default"
+    });
   };
 
   // Complete a scene and determine the next scene
