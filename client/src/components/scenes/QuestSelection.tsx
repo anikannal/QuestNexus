@@ -16,7 +16,13 @@ export default function QuestSelection() {
     
     if (questInState.status === "available") {
       console.log("Quest is available, starting...");
-      startQuest(questId);
+      console.log("startQuest function reference:", startQuest);
+      try {
+        console.log("Calling startQuest with questId:", questId);
+        startQuest(questId);
+      } catch (error) {
+        console.error("Error while calling startQuest:", error);
+      }
     } else {
       console.log("Quest not available");
     }

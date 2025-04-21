@@ -161,7 +161,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   // Start a new quest
   const startQuest = (questId: number) => {
-    console.log("Starting quest from button:", questId);
+    console.log("Inside startQuest! QuestID:", questId);
     
     setGameState(prevState => {
       if (!prevState) {
