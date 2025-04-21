@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Open+Sans:wght@400;600&family=Alegreya:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 30% 93%;
+    --foreground: 220 13% 20%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 20%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 20%;
+    
+    --primary: 200 48% 20%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 36 58% 54%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 220 13% 94%;
+    --muted-foreground: 220 13% 45%;
+    
+    --accent: 208 100% 65%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 200 48% 20%;
+    
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    background-image: url('https://images.unsplash.com/photo-1519793676326-eef8c8dba838?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&h=1000&q=80');
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+  
+  .font-heading {
+    font-family: 'Cinzel', serif;
+  }
+  
+  .font-body {
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  .font-accent {
+    font-family: 'Alegreya', serif;
+  }
+  
+  .panel {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .choice-box {
+    transition: all 0.2s ease;
+  }
+  
+  .choice-box:hover {
+    transform: scale(1.03);
+  }
+  
+  .battle-card {
+    transition: all 0.2s ease;
+  }
+  
+  .battle-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .inventory-item {
+    transition: transform 0.2s ease;
+  }
+  
+  .inventory-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .player-stats-bar {
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+}
