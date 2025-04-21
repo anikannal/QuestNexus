@@ -103,9 +103,10 @@ const GameContext = createContext<GameContextProps | null>(null);
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [gameState, setGameState] = useState<GameStateData | null>(null);
+  const [gameState, setGameState] = useState<GameStateData | null>(initialGameState);
   const [location, navigate] = useLocation();
   const { toast } = useToast();
+  console.log("GameProvider initialized with gameState:", gameState);
 
   // Initialize a new game
   const initializeNewGame = () => {
@@ -184,23 +185,22 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("Inside startQuest! QuestID:", questId);
     
     setGameState(prevState => {
-      if (!prevState) {
-        console.error("Cannot start quest: gameState is null");
-        return prevState;
-      }
+      const currentState = prevState || initialGameState; // Fallback to initialGameState if prevState is null
+
+
 
       const quest = quests.find(q => q.id === questId);
       if (!quest) {
         console.error("Cannot start quest: quest not found");
-        return prevState;
+        return currentState;
       }
 
       const newState = {
-        ...prevState,
+        ...currentState,
         quests: {
-          ...prevState.quests,
+          ...currentState.quests,
           current: questId,
-          available: prevState.quests.available.map(q => ({
+          available: currentState.quests.available.map(q => ({
             ...q,
             status: q.id === questId ? "active" : q.status
           }))
@@ -303,7 +303,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         // Complete the quest
         const questId = gameState.currentScene.questId;
 
-        setGameState(prev => {
+        setGameState((prev: GameStateData | null) => {
           if (!prev) return prev;
 
           // Unlock the next quest if applicable
