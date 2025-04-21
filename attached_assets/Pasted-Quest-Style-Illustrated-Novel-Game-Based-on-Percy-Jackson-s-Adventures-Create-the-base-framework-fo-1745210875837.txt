@@ -1,0 +1,56 @@
+Quest-Style Illustrated Novel Game Based on Percy Jackson’s Adventures
+
+Create the base framework for an interactive, quest-style game inspired by Percy Jackson’s adventures. The game should be designed as a series of illustrated quests, each quest made up of multiple types of scenes, with built-in logic to handle story progression, branching paths, and player decisions.
+
+General Structure:
+The player begins as a regular camper at Camp Half-Blood.
+As the player completes quests, they earn gems, magical powers, and weapons.
+Each quest is a collection of scenes presented in the style of a graphic novel.
+Each scene can have one or more illustrated panels.
+Add placeholders for graphic art — they will be inserted later.
+Scene Types:
+1. Story Scenes
+
+Purpose: Set the context, develop characters, or move the story forward.
+Layout: 1 or more panels.
+Interaction: Only an arrow button (or "Next") to proceed to the next panel.
+2. Puzzle Scenes
+
+Purpose: Challenge the player with a riddle or puzzle.
+Layout: 1 panel.
+Interaction: Display a riddle or puzzle question.
+Provide a text input box for the player to type their answer.
+On submission:
+If correct: continue on a defined success path.
+If incorrect: go to an alternate path.
+3. Battle Scenes
+
+Purpose: Turn-based combat between player and enemy.
+Layout: Always 3 panels:
+Panel 1: Player and enemy appear on the battlefield (placeholder for art).
+Panel 2: Main battle interface.
+Display player’s weapons and powers as cards on the side of the screen.
+Allow the player to select and use them strategically against the enemy.
+Enemy attacks or defends based on basic AI or pre-defined logic.
+Panel 3: Show the outcome and transition.
+If the player wins, move to a specific path.
+If the player loses, move to an alternate path.
+4. Decision/Choice Scenes
+
+Purpose: Let the player make key choices that impact the story.
+Layout: 1 panel showing a conversation or dramatic scene between the player and another character.
+Interaction:
+Display 2 or more choice boxes with different decisions.
+When a choice is selected:
+Continue to the corresponding path for that decision.
+All choices lead to different outcomes (new scenes or quests).
+Requirements:
+Each quest and its scenes should be modular and easily extendable.
+Scenes should include metadata for:
+Type (Story, Puzzle, Battle, Decision)
+Number of panels
+Branching paths (next scene IDs or quest segments based on player actions)
+Support saving player progress, inventory (gems, powers, weapons), and unlocked paths.
+Graphic Elements:
+Use placeholders or tags (e.g., <image_placeholder_scene_1_panel_2>) for all graphic art.
+These will be manually replaced with illustrations later.
