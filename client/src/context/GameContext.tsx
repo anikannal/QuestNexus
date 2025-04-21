@@ -160,65 +160,45 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = async (questId: number) => {
+  const startQuest = (questId: number) => {
     console.log("=== Start Quest Debug ===");
     console.log("Starting quest with ID:", questId);
 
-    // Validate game state
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
     }
 
-    // Find and validate quest
     const quest = quests.find(q => q.id === questId);
     if (!quest) {
       console.error("Cannot start quest: quest not found with ID", questId);
       return;
     }
 
-    try {
-      // Load and validate first scene
-      const module = await import("@/data/scenes");
-      const scenes = module.default;
-      const firstScene = scenes.find(s => s.id === quest.startingSceneId);
-
-      if (!firstScene) {
-        console.error("Starting scene not found:", quest.startingSceneId);
-        return;
+    const startingScene = quest.startingSceneId;
+    
+    const newState = {
+      ...gameState,
+      quests: {
+        ...gameState.quests,
+        current: questId,
+        available: gameState.quests.available.map(q => ({
+          ...q,
+          status: q.id === questId ? "active" : q.status
+        }))
+      },
+      currentScene: {
+        type: "story",
+        id: startingScene,
+        questId: questId,
+        currentPanel: 1,
+        totalPanels: 1
       }
+    };
 
-      // Create new state with explicit quest and scene data
-      const newState: GameStateData = {
-        player: gameState.player,
-        quests: {
-          completed: gameState.quests.completed,
-          current: questId, // Set current quest ID
-          available: gameState.quests.available.map(q => ({
-            ...q,
-            status: q.id === questId ? "active" : q.status
-          }))
-        },
-        currentScene: {
-          type: firstScene.type,
-          id: firstScene.id,
-          questId: questId,
-          currentPanel: 1,
-          totalPanels: firstScene.panels?.length || 1
-        }
-      };
-
-      // Update state and save to localStorage atomically
-      await Promise.all([
-        new Promise<void>(resolve => {
-          setGameState(newState);
-          resolve();
-        }),
-        new Promise<void>(resolve => {
-          localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
-          resolve();
-        })
-      ]);
+    // Update state synchronously
+    setGameState(newState);
+    localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
 
       console.log("Quest started successfully. New state:", newState);
       
