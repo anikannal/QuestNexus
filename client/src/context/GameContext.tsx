@@ -204,26 +204,61 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       description: `You have begun: ${quest.title}`,
       variant: "default",
     });
+
+    // Display a toast notification for the new questId in currentScene
+    toast({
+      title: "Debug Info",
+      description: `New questId in currentScene: ${newState.currentScene.questId}`,
+      variant: "info",
+    });
   
     // Update the game state
     setGameState((prevState: GameStateData | null) => {
-      console.log("Previous state:", prevState);
-      console.log("Updated state:", newState);
+      toast({
+        title: "Debug Info",
+        description: `Previous state: ${JSON.stringify(prevState)}`,
+        variant: "info",
+      });
+    
+      // Display a toast notification for the updated state
+      toast({
+        title: "Debug Info",
+        description: `Updated state: ${JSON.stringify(newState)}`,
+        variant: "info",
+      });
       return newState;
     });
   };
 
+
   // Complete a scene and determine the next scene
   const completeScene = async (outcome: string) => {
     if (!gameState) {
-      console.error("Cannot complete scene: gameState is null");
+      toast({
+        title: "Error",
+        description: "Cannot complete scene: gameState is null",
+        variant: "destructive",
+      });
       return;
     }
 
-    console.log("=== Complete Scene Debug ===");
-    console.log("Completing scene with outcome:", outcome);
-    console.log("Current scene ID:", gameState.currentScene.id);
-    console.log("Current gameState before completing scene:", gameState);
+    toast({
+      title: "Debug Info",
+      description: `Completing scene with outcome: ${outcome}`,
+      variant: "info",
+    });
+  
+    toast({
+      title: "Debug Info",
+      description: `Current scene ID: ${gameState.currentScene.id}`,
+      variant: "info",
+    });
+  
+    toast({
+      title: "Debug Info",
+      description: `Current gameState before completing scene: ${JSON.stringify(gameState)}`,
+      variant: "info",
+    });
 
 
     try {
@@ -231,6 +266,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       const module = await import("@/data/scenes");
       const scenes = module.default;
       const currentScene = scenes.find((s: any) => s.id === gameState.currentScene.id);
+
+      // Add a toast notification for the current scene
+      toast({
+        title: "Debug Info",
+        description: `Current scene: ${JSON.stringify(currentScene)}`,
+        variant: "info",
+      });
 
       if (!currentScene) {
         console.error("Current scene not found:", gameState.currentScene.id);
