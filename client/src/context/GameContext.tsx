@@ -180,14 +180,15 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     import("@/data/scenes").then(module => {
       console.log("=== Scene Loading Debug ===");
       const scenes = module.default;
+      console.log("Available scenes:", scenes);
       const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
-      
+      console.log("First scene found:", firstScene);
+
       if (!firstScene) {
         console.error("First scene not found:", quest.startingSceneId);
         return;
       }
 
-      // Update both quest and scene state together
       setGameState(prev => {
         if (!prev) return prev;
         return {
@@ -205,18 +206,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           }
         };
       });
-
       console.log("Starting quest:", quest.title);
       console.log("Starting scene ID:", quest.startingSceneId);
       console.log("=== Scene Loading Debug ===");
-      console.log("Available scenes:", scenes);
-      console.log("First scene found:", firstScene);
-
-      if (!firstScene) {
-        console.error("First scene not found:", quest.startingSceneId);
-        return;
-      }
-
       console.log("Updated game state with quest and scene");
     }).catch(error => {
       console.error("%cError loading scenes:", "color: red; font-weight: bold;", error);
