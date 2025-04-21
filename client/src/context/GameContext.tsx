@@ -160,7 +160,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = (questId: number) => {
+  const startQuest = async (questId: number) => {
     console.log("=== Start Quest Debug ===");
     console.log("Starting quest with ID:", questId);
 
@@ -176,22 +176,30 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // Update game state immediately with the new quest and scene
-    setGameState(prev => {
-      if (!prev) return prev;
+    try {
+      // Load scenes data to get starting scene
+      const module = await import("@/data/scenes");
+      const scenes = module.default;
+      const firstScene = scenes.find(s => s.id === quest.startingSceneId);
 
+      if (!firstScene) {
+        console.error("Starting scene not found:", quest.startingSceneId);
+        return;
+      }
+
+      // Update game state immediately with the new quest and scene
       const newState = {
-        ...prev,
+        ...gameState,
         quests: {
-          ...prev.quests,
+          ...gameState.quests,
           current: questId
         },
         currentScene: {
-          type: "story",
-          id: quest.startingSceneId,
+          type: firstScene.type,
+          id: firstScene.id,
           questId: questId,
           currentPanel: 1,
-          totalPanels: 1
+          totalPanels: firstScene.panels?.length || 1
         }
       };
 
@@ -202,14 +210,22 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         console.error("Failed to save game state:", error);
       }
 
-      return newState;
-    });
+      setGameState(newState);
 
-    toast({
-      title: "Quest Started",
-      description: `You have begun: ${quest.title}`,
-      variant: "default"
-    });
+      toast({
+        title: "Quest Started",
+        description: `You have begun: ${quest.title}`,
+        variant: "default"
+      });
+
+    } catch (error) {
+      console.error("Error starting quest:", error);
+      toast({
+        title: "Error",
+        description: "Failed to start quest",
+        variant: "destructive"
+      });
+    }
   };
 
   // Complete a scene and determine the next scene
