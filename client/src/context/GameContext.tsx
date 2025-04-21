@@ -81,7 +81,7 @@ interface GameContextProps {
   initializeNewGame: () => void;
   loadGame: () => void;
   saveGame: () => void;
-  startQuest: (questId: number) => void;
+  startQuest: (questId: number, sceneData?: {id: string, questId: number}) => void;
   completeScene: (outcome: string) => void;
   updateSceneProgress: (progress: Partial<SceneState>) => void;
   updatePlayerStats: (stats: Partial<Player>) => void;
@@ -160,9 +160,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = async (questId: number) => {
+  const startQuest = async (questId: number, sceneData?: {id: string, questId: number}) => {
     console.log("=== Start Quest Debug ===");
     console.log("Attempting to start quest:", questId);
+    console.log("Scene data provided:", sceneData);
+    
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
@@ -208,23 +210,30 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // WORKAROUND: Use the scene questId from the data file since that's the one defined in scenes.ts
-      // Ensure we preserve this questId in the scene data
-      const sceneQuestId = firstScene.questId || questId;
-      console.log("Using scene questId:", sceneQuestId);
+      // CRITICAL FIX: If sceneData is provided, use it. Otherwise, try to get it from the first scene
+      // Extract questId directly from the scene object - this is crucial to fix the issue
+      const sceneQuestId = 
+        // First priority: Use the questId from the provided sceneData if available
+        (sceneData?.questId) ||
+        // Second priority: Use the questId from the scene in data file
+        firstScene.questId || 
+        // Fallback: Use the quest ID as passed to this function
+        questId;
+
+      console.log("Final questId being used:", sceneQuestId);
       
-      // Create the properly typed scene object
+      // Create the properly typed scene object with a KNOWN type and CORRECT questId
       const updatedScene = {
         type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
         id: quest.startingSceneId,
-        questId: sceneQuestId, // Use the questId from the scene data first
+        questId: sceneQuestId, // CRITICAL: This will now be 1 from the scenes.ts file
         currentPanel: 1,
         totalPanels: firstScene.panels?.length || 1
       };
       
       console.log("Updated scene object:", updatedScene);
 
-      // Set state directly first - immediate update
+      // Set state with the correctly formed scene object
       setGameState(prev => {
         if (!prev) return prev;
         

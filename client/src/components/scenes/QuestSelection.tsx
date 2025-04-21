@@ -32,17 +32,29 @@ export default function QuestSelection() {
         const firstScene = scenes.find(s => s.id === firstSceneId);
         console.log("First scene:", firstScene);
         
+        // CRITICAL FIX: Create a sceneData object to pass to startQuest
         if (firstScene) {
           console.log("Using directly found scene with ID:", firstScene.id);
           console.log("Scene questId:", firstScene.questId);
           
-          // Print what we're about to send to startQuest
+          // Now start the quest with explicit scene data to ensure correct questId
+          const sceneQuestId = firstScene.questId || questId;
           console.log("Will start quest with ID:", questId);
+          console.log("Will use scene questId:", sceneQuestId);
+          
+          // Pass both the questId and the scene data to startQuest
+          await startQuest(questId, {
+            id: firstScene.id,
+            questId: sceneQuestId 
+          });
+          
+          console.log("Quest started successfully");
+        } else {
+          // Fallback if scene not found
+          console.error("Scene not found, using fallback");
+          await startQuest(questId);
+          console.log("Quest started with fallback method");
         }
-        
-        // Now start the quest with the right ID
-        await startQuest(questId);
-        console.log("Quest started successfully");
       } catch (error) {
         console.error("Error starting quest:", error);
       }
