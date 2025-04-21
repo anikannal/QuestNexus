@@ -9,11 +9,27 @@ import DecisionScene from "@/components/scenes/DecisionScene";
 import PlayerDashboard from "@/components/player/PlayerDashboard";
 import InventoryScreen from "@/components/inventory/InventoryScreen";
 import { useGameContext } from "@/context/GameContext";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import quests from "@/data/quests";
 
 export default function GameContainer() {
-  const { gameState, startQuest } = useGameContext();
+  const { gameState, startQuest, initializeNewGame } = useGameContext();
   const [showInventory, setShowInventory] = useState(false);
+  const { toast } = useToast();
+  
+  // Handle hard reset for development/debugging
+  const handleHardReset = () => {
+    console.log("Performing hard reset of game state");
+    localStorage.clear();
+    toast({
+      title: "Game Reset",
+      description: "All game progress has been cleared. Starting a fresh game.",
+      variant: "default"
+    });
+    // Initialize a new game with fresh state
+    initializeNewGame();
+  };
   
   // Automatically start the first quest if none is selected
   useEffect(() => {
@@ -60,6 +76,40 @@ export default function GameContainer() {
     console.log("Current scene questId:", gameState.currentScene.questId);
     console.log("Current scene ID:", gameState.currentScene.id);
     
+    // CRITICAL FIX: If questId is still 0 but a quest is selected, try to update manually
+    if (gameState.currentScene.questId === 0 && currentQuestId > 0) {
+      console.log("CRITICAL ISSUE: questId is still 0 despite quest being selected");
+      console.log("Attempt emergency fix by getting the scene data directly");
+      
+      // Try to force the correct scene based on the quests data
+      try {
+        // Import the scenes data to find the correct questId
+        import("@/data/scenes").then(({ default: scenes }) => {
+          console.log("Loaded scenes data:", scenes);
+          // Find the first scene for this quest to get the correct questId
+          const matchingScene = scenes.find(s => s.questId === currentQuestId);
+          
+          if (matchingScene) {
+            console.log("Found matching scene with correct questId:", matchingScene);
+            // Try to force update via startQuest
+            startQuest(currentQuestId, {
+              id: matchingScene.id,
+              questId: matchingScene.questId
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Failed to perform emergency scene fix:", error);
+      }
+      
+      // Display an error message but don't block rendering
+      toast({
+        title: "Scene Loading Error",
+        description: "There was an issue starting the quest. Try resetting the game if scenes don't load correctly.",
+        variant: "destructive"
+      });
+    }
+    
     // If the scene ID is empty but we have a quest selected, try to find the starting scene
     if ((!gameState.currentScene.id || gameState.currentScene.id === "") && currentQuestId > 0) {
       console.log("Scene ID is empty but quest is selected, trying to find starting scene");
@@ -103,14 +153,48 @@ export default function GameContainer() {
     }
   };
 
+  // Detect the problematic state where questId is still 0 but quest is selected
+  const hasQuestIdError = gameState.quests.current !== null && gameState.currentScene.questId === 0;
+  
+  // Error message for quest starting error
+  const renderQuestStartError = () => (
+    <div className="bg-red-50 border border-red-200 rounded-lg p-6 my-4 max-w-3xl mx-auto">
+      <h3 className="text-red-600 text-lg font-bold mb-2">Game State Error Detected</h3>
+      <p className="mb-4 text-gray-700">
+        The quest was started but the scene data is in an inconsistent state (questId is still 0).
+        This is a known issue that we're working to fix. Please reset your game to start fresh.
+      </p>
+      <Button 
+        onClick={handleHardReset}
+        variant="destructive"
+      >
+        Reset Game Data
+      </Button>
+    </div>
+  );
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header onToggleInventory={toggleInventory} />
       
       <main className="flex-grow container mx-auto px-4 py-8">
+        {/* Show error message if we detect the problematic questId=0 state */}
+        {hasQuestIdError && renderQuestStartError()}
+        
         <div id="gameView" className="relative">
           {gameState.quests.current !== null && <PlayerDashboard onToggleInventory={toggleInventory} />}
           {renderCurrentScene()}
+        </div>
+        
+        {/* Emergency reset button during development */}
+        <div className="fixed bottom-16 right-4 z-50">
+          <Button 
+            onClick={handleHardReset}
+            size="sm"
+            className="bg-red-600 hover:bg-red-700 text-xs"
+          >
+            Reset Game (Dev)
+          </Button>
         </div>
       </main>
       
