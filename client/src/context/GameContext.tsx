@@ -87,7 +87,17 @@ interface GameContextProps {
   updatePlayerStats: (stats: Partial<Player>) => void;
 }
 
-
+// Create context
+const GameContext = createContext<GameContextProps>({
+  gameState: initialGameState,
+  initializeNewGame: () => {},
+  loadGame: () => {},
+  saveGame: () => {},
+  startQuest: () => {},
+  completeScene: () => {},
+  updateSceneProgress: () => {},
+  updatePlayerStats: () => {}
+});
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
@@ -100,7 +110,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("Initializing new game with state:", initialGameState);
     setGameState({...initialGameState});
     console.log("After setting game state");
-    navigate("/game");
+    try {
+      navigate("/game");
+    } catch (error) {
+      console.error("Navigation failed:", error);
+      toast({
+        title: "Error",
+        description: "Could not navigate to the game page.",
+        variant: "destructive"
+      });
+    }
     console.log("Navigated to game page");
   };
 
@@ -111,7 +130,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       if (savedGame) {
         const parsedGame = JSON.parse(savedGame) as GameStateData;
         setGameState(parsedGame);
-        navigate("/game");
+        try {
+          navigate("/game");
+        } catch (error) {
+          console.error("Navigation failed:", error);
+          toast({
+            title: "Error",
+            description: "Could not navigate to the game page.",
+            variant: "destructive"
+          });
+        }
       } else {
         initializeNewGame();
       }
@@ -188,7 +216,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.log("New state in startQuest:", newState);
 
       // Save to localStorage inside the state update
-      localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+      try {
+        localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+      } catch (error) {
+        console.error("Failed to save game state to localStorage:", error);
+        toast({
+          title: "Error",
+          description: "Could not save your progress.",
+          variant: "destructive"
+        });
+      }
       
       toast({
         title: "Quest Started",
@@ -196,11 +233,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         variant: "default"
       });
 
-      setGameState((prevState) => {
-        console.log("Previous state:", prevState);
-        console.log("Updated state:", newState);
-        return newState;
-      });
+      return newState;
     });
   };
 
@@ -219,8 +252,19 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       // Find the current scene
-      const module = await import("@/data/scenes");
-      const scenes = module.default;
+            let scenes;
+      try {
+        const module = await import("@/data/scenes");
+        scenes = module.default;
+      } catch (error) {
+        console.error("Failed to load scenes:", error);
+        toast({
+          title: "Error",
+          description: "Could not load scene data.",
+          variant: "destructive"
+        });
+        return;
+      }
       const currentScene = scenes.find((s: any) => s.id === gameState.currentScene.id);
 
       if (!currentScene) {
@@ -239,14 +283,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       let nextSceneId = "";
 
       if (currentScene.type === "story") {
-        nextSceneId = currentScene.nextScene;
+        nextSceneId = currentScene.nextScene || "";
       } else if (currentScene.type === "puzzle") {
-        nextSceneId = outcome === "success" ? currentScene.successScene : currentScene.failureScene;
+        nextSceneId = outcome === "success" ? currentScene.successScene || "" : currentScene.failureScene || "";
       } else if (currentScene.type === "battle") {
-        nextSceneId = outcome === "success" ? currentScene.victoryScene : currentScene.defeatScene;
+        nextSceneId = outcome === "success" ? currentScene.victoryScene || "" : currentScene.defeatScene || "";
       } else if (currentScene.type === "decision") {
         const selectedChoice = currentScene.choices.find((c: any) => c.id === outcome);
-        nextSceneId = selectedChoice ? selectedChoice.nextScene : currentScene.defaultNextScene;
+        nextSceneId = selectedChoice?.nextScene || currentScene.defaultNextScene || "";
       }
 
       console.log("Next scene ID:", nextSceneId);
@@ -403,17 +447,20 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-    // Create context
-  const GameContext = createContext<GameContextProps>({
-    gameState: initialGameState,
-    initializeNewGame, // Reference the actual function
-    loadGame,          // Reference the actual function
-    saveGame,          // Reference the actual function
-    startQuest,        // Reference the actual function
-    completeScene,     // Reference the actual function
-    updateSceneProgress, // Reference the actual function
-    updatePlayerStats  // Reference the actual function
-  });
+  // Initialize the context lazily
+  if (!GameContext) {
+    GameContext = createContext<GameContextProps>({
+      gameState: gameState || initialGameState,
+      initializeNewGame,
+      loadGame,
+      saveGame,
+      startQuest,
+      completeScene,
+      updateSceneProgress,
+      updatePlayerStats
+    });
+  }
+
   // Context value
   const contextValue: GameContextProps = {
     gameState: gameState || initialGameState,
@@ -429,7 +476,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
 };
 
-
-
 // Custom hook for using the game context
-export const useGameContext = () => useContext(GameContext);
+export const useGameContext = () => {
+  if (!GameContext) {
+    throw new Error("GameContext is not initialized. Ensure GameProvider is rendered.");
+  }
+  return useContext(GameContext);
+};
