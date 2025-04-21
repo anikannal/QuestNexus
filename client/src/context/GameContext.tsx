@@ -88,16 +88,19 @@ interface GameContextProps {
 }
 
 // Create context
-const GameContext = createContext<GameContextProps>({
-  gameState: initialGameState,
-  initializeNewGame: () => {},
-  loadGame: () => {},
-  saveGame: () => {},
-  startQuest: () => {},
-  completeScene: () => {},
-  updateSceneProgress: () => {},
-  updatePlayerStats: () => {}
-});
+//const GameContext = createContext<GameContextProps>({
+//  gameState: initialGameState,
+//  initializeNewGame: () => {},
+//  loadGame: () => {},
+//  saveGame: () => {},
+//  startQuest: () => {},
+//  completeScene: () => {},
+//  updateSceneProgress: () => {},
+//  updatePlayerStats: () => {}
+//});
+
+let GameContext: React.Context<GameContextProps>;
+
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
