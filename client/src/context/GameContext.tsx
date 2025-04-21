@@ -175,18 +175,31 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.error("Cannot start quest: quest not found with ID", questId);
       return;
     }
+    
+    // Hard-coded validation for starting scene - critical for quest starting
+    if (!quest.startingSceneId) {
+      console.error("Quest has no starting scene ID:", quest);
+      toast({
+        title: "Error Starting Quest",
+        description: "This quest doesn't have a starting scene defined.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    console.log("Starting quest with ID:", questId);
+    console.log("Starting scene ID:", quest.startingSceneId);
 
     try {
       // Import scenes first to ensure we have all the data
       const module = await import("@/data/scenes");
-      console.log("=== Scene Loading Debug ===");
       const scenes = module.default;
-      console.log("Available scenes:", scenes);
       const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
+      
       console.log("First scene found:", firstScene);
 
       if (!firstScene) {
-        console.error("First scene not found:", quest.startingSceneId);
+        console.error("First scene not found with ID:", quest.startingSceneId);
         toast({
           title: "Error Starting Quest",
           description: `Could not find starting scene for quest: ${quest.title}`,
@@ -195,23 +208,29 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Update the game state with the quest and scene information
+      // Create the updated scene object
+      const updatedScene = {
+        type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
+        id: quest.startingSceneId,
+        questId: questId,
+        currentPanel: 1,
+        totalPanels: firstScene.panels?.length || 1
+      };
+      
+      console.log("Updated scene object:", updatedScene);
+
+      // Set state directly first - immediate update
       setGameState(prev => {
         if (!prev) return prev;
         
+        // Create updated game state
         const updatedGameState = {
           ...prev,
           quests: {
             ...prev.quests,
             current: questId
           },
-          currentScene: {
-            type: firstScene.type,
-            id: quest.startingSceneId,
-            questId: questId,
-            currentPanel: 1,
-            totalPanels: firstScene.panels?.length || 1
-          }
+          currentScene: updatedScene
         };
         
         console.log("Updated game state:", updatedGameState);
@@ -226,10 +245,26 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return updatedGameState;
       });
       
+      // Add a very short delay and update state again to ensure correct rendering
+      setTimeout(() => {
+        console.log("Performing follow-up update to ensure scene loaded correctly");
+        setGameState(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            currentScene: {
+              ...prev.currentScene,
+              type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
+              id: quest.startingSceneId,
+              questId: questId
+            }
+          };
+        });
+      }, 50);
+      
       console.log("Quest started successfully");
       console.log("Starting quest:", quest.title);
       console.log("Starting scene ID:", quest.startingSceneId);
-      console.log("=== Scene Loading Debug ===");
       
       toast({
         title: "Quest Started",
