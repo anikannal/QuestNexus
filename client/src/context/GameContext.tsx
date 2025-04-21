@@ -211,6 +211,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         console.log("Updated state:", newState);
         return newState;
       });
+    });
   };
 
   // Complete a scene and determine the next scene
