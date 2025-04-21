@@ -6,6 +6,7 @@ export default function QuestSelection() {
   const { gameState, startQuest } = useGameContext();
   
   const handleQuestSelect = (questId: number) => {
+    console.log(`Attempting to start quest with ID: ${questId}`);
     const questInState = gameState.quests.available.find(q => q.id === questId);
     
     if (!questInState) {
@@ -14,6 +15,7 @@ export default function QuestSelection() {
     }
     
     if (questInState.status === "available") {
+      console.log("Quest is available, starting...");
       startQuest(questId);
     } else {
       console.log("Quest not available");
