@@ -87,17 +87,7 @@ interface GameContextProps {
   updatePlayerStats: (stats: Partial<Player>) => void;
 }
 
-// Create context
-const GameContext = createContext<GameContextProps>({
-  gameState: initialGameState,
-  initializeNewGame: () => {},
-  loadGame: () => {},
-  saveGame: () => {},
-  startQuest: () => {},
-  completeScene: () => {},
-  updateSceneProgress: () => {},
-  updatePlayerStats: () => {}
-});
+
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
@@ -413,6 +403,17 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+    // Create context
+  const GameContext = createContext<GameContextProps>({
+    gameState: initialGameState,
+    initializeNewGame, // Reference the actual function
+    loadGame,          // Reference the actual function
+    saveGame,          // Reference the actual function
+    startQuest,        // Reference the actual function
+    completeScene,     // Reference the actual function
+    updateSceneProgress, // Reference the actual function
+    updatePlayerStats  // Reference the actual function
+  });
   // Context value
   const contextValue: GameContextProps = {
     gameState: gameState || initialGameState,
@@ -427,6 +428,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
 };
+
+
 
 // Custom hook for using the game context
 export const useGameContext = () => useContext(GameContext);
