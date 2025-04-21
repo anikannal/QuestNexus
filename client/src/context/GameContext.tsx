@@ -210,7 +210,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.log("Starting scene ID:", quest.startingSceneId);
       console.log("=== Scene Loading Debug ===");
       console.log("Available scenes:", scenes);
-      const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
       console.log("First scene found:", firstScene);
 
       if (!firstScene) {
