@@ -160,113 +160,70 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-    const startQuest = async (questId: number) => {
-    const quest = gameState.quests.available.find((q) => q.id === questId);
-  
-    // Ensure the quest object is valid
-    if (!quest) {
-      toast({
-        title: "Error",
-        description: `Quest not found for questId: ${questId}`,
-        variant: "destructive",
-      });
-      return;
-    }
-  
-    toast({
-      title: "Debug Info",
-      description: `Quest object: ${JSON.stringify(quest)}`,
-      variant: "info",
-    });
-  
-    const newState = {
-      ...gameState,
-      quests: {
-        ...gameState.quests,
-        current: questId, // Set questId here
-        available: gameState.quests.available.map((q) => ({
-          ...q,
-          status: q.id === questId ? "active" : q.status,
-        })),
-      },
-      currentScene: {
-        type: "story",
-        id: quest.startingSceneId,
-        questId: questId, // Set questId here
-        currentPanel: 1,
-        totalPanels: 1,
-      },
-    };
-  
-    // Log the new state for debugging
-    console.log("New state in startQuest:", newState);
-    console.log("New questId in state:", newState.quests.current);
-    console.log("New questId in currentScene:", newState.currentScene.questId);
-  
-    // Save to localStorage
-    localStorage.setItem("percyJacksonGameState", JSON.stringify(newState));
-  
-    // Display a toast notification
-    toast({
-      title: "Quest Started",
-      description: `You have begun: ${quest.title}`,
-      variant: "default",
-    });
-
-    // Display a toast notification for the new questId in currentScene
-    toast({
-      title: "Debug Info",
-      description: `New questId in currentScene: ${newState.currentScene.questId}`,
-      variant: "info",
-    });
-  
-    // Update the game state
-    setGameState((prevState: GameStateData | null) => {
-      toast({
-        title: "Debug Info",
-        description: `Previous state: ${JSON.stringify(prevState)}`,
-        variant: "info",
-      });
+  const startQuest = (questId: number) => {
+    console.log("Starting quest from button:", questId);
     
-      // Display a toast notification for the updated state
-      toast({
-        title: "Debug Info",
-        description: `Updated state: ${JSON.stringify(newState)}`,
-        variant: "info",
-      });
-      return newState;
-    });
-  };
+    setGameState(prevState => {
+      if (!prevState) {
+        console.error("Cannot start quest: gameState is null");
+        return prevState;
+      }
 
+      const quest = quests.find(q => q.id === questId);
+      if (!quest) {
+        console.error("Cannot start quest: quest not found");
+        return prevState;
+      }
+
+      const newState = {
+        ...prevState,
+        quests: {
+          ...prevState.quests,
+          current: questId,
+          available: prevState.quests.available.map(q => ({
+            ...q,
+            status: q.id === questId ? "active" : q.status
+          }))
+        },
+        currentScene: {
+          type: "story",
+          id: quest.startingSceneId,
+          questId: questId,
+          currentPanel: 1,
+          totalPanels: 1
+        }
+      };
+
+      // Log the new state for debugging
+      console.log("New state in startQuest:", newState);
+
+      // Save to localStorage inside the state update
+      localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+      
+      toast({
+        title: "Quest Started",
+        description: `You have begun: ${quest.title}`,
+        variant: "default"
+      });
+
+      setGameState((prevState) => {
+        console.log("Previous state:", prevState);
+        console.log("Updated state:", newState);
+        return newState;
+      });
+  };
 
   // Complete a scene and determine the next scene
   const completeScene = async (outcome: string) => {
     if (!gameState) {
-      toast({
-        title: "Error",
-        description: "Cannot complete scene: gameState is null",
-        variant: "destructive",
-      });
+      console.error("Cannot complete scene: gameState is null");
       return;
     }
 
-    toast({
-      title: "Debug Info",
-      description: `Completing scene with outcome: ${outcome}`,
-      variant: "info",
-    });
-  
-    toast({
-      title: "Debug Info",
-      description: `Current scene ID: ${gameState.currentScene.id}`,
-      variant: "info",
-    });
-  
-    toast({
-      title: "Debug Info",
-      description: `Current gameState before completing scene: ${JSON.stringify(gameState)}`,
-      variant: "info",
-    });
+    console.log("=== Complete Scene Debug ===");
+    console.log("Completing scene with outcome:", outcome);
+    console.log("Current scene ID:", gameState.currentScene.id);
+    console.log("Current gameState before completing scene:", gameState);
 
 
     try {
@@ -274,13 +231,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       const module = await import("@/data/scenes");
       const scenes = module.default;
       const currentScene = scenes.find((s: any) => s.id === gameState.currentScene.id);
-
-      // Add a toast notification for the current scene
-      toast({
-        title: "Debug Info",
-        description: `Current scene: ${JSON.stringify(currentScene)}`,
-        variant: "info",
-      });
 
       if (!currentScene) {
         console.error("Current scene not found:", gameState.currentScene.id);
@@ -343,7 +293,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           } catch (error) {
             console.error("Failed to save completed quest state to localStorage:", error);
           }
-          console.log("Updated gameState after completing scene:", updatedGameState);
+          console.log("Updated gameState after completing scene:", gameState);
 
           return updatedGameState;
         });

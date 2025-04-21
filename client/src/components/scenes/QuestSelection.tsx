@@ -88,6 +88,7 @@ export default function QuestSelection() {
                     e.stopPropagation();
                     console.log("Starting quest from button:", questState.id);
                     const questDetails = quests.find(q => q.id === questState.id);
+                    console.log("Quest details:", questDetails);
                     if (questDetails) {
                       // Get the first scene data
                       const scenesModule = await import("@/data/scenes");
