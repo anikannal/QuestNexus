@@ -164,7 +164,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("=== Start Quest Debug ===");
     console.log("Attempting to start quest:", questId);
     console.log("Scene data provided:", sceneData);
-    
+
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
@@ -177,7 +177,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.error("Cannot start quest: quest not found with ID", questId);
       return;
     }
-    
+
     // Hard-coded validation for starting scene - critical for quest starting
     if (!quest.startingSceneId) {
       console.error("Quest has no starting scene ID:", quest);
@@ -188,7 +188,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       });
       return;
     }
-    
+
     console.log("Starting quest with ID:", questId);
     console.log("Starting scene ID:", quest.startingSceneId);
 
@@ -197,7 +197,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       const module = await import("@/data/scenes");
       const scenes = module.default;
       const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
-      
+
       console.log("First scene found:", firstScene);
 
       if (!firstScene) {
@@ -221,7 +221,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         questId;
 
       console.log("Final questId being used:", sceneQuestId);
-      
+
       // Create the properly typed scene object with a KNOWN type and CORRECT questId
       const updatedScene = {
         type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
@@ -230,45 +230,54 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         currentPanel: 1,
         totalPanels: firstScene.panels?.length || 1
       };
-      
+
       console.log("Updated scene object:", updatedScene);
 
-      // Set state with the correctly formed scene object
-      setGameState(prev => {
-        if (!prev) return prev;
-        
-        // Create updated game state
-        const updatedGameState = {
-          ...prev,
-          quests: {
-            ...prev.quests,
-            current: questId
-          },
-          currentScene: updatedScene
-        };
-        
-        console.log("Updated game state:", updatedGameState);
-        
-        // Also save to localStorage for persistence
-        try {
-          localStorage.setItem('percyJacksonGameState', JSON.stringify(updatedGameState));
-        } catch (error) {
-          console.error("Failed to save updated game state to localStorage:", error);
-        }
-        
-        return updatedGameState;
+      // Update game state with the correctly formed scene object
+      const updatedGameState = await new Promise(resolve => {
+        setGameState(prev => {
+          if (!prev) return prev;
+
+          // Create updated game state
+          const newState = {
+            ...prev,
+            quests: {
+              ...prev.quests,
+              current: questId
+            },
+            currentScene: updatedScene
+          };
+
+          console.log("Updated game state:", newState);
+
+          // Also save to localStorage for persistence
+          try {
+            localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+          } catch (error) {
+            console.error("Failed to save updated game state to localStorage:", error);
+          }
+
+          resolve(newState);
+          return newState;
+        });
       });
-      
+
+      // Verify the update was successful
+      if (updatedGameState.currentScene.questId === 0) {
+        console.error("Failed to update quest ID properly");
+        throw new Error("Quest ID update failed");
+      }
+
       console.log("Quest started successfully");
       console.log("Starting quest:", quest.title);
       console.log("Starting scene ID:", quest.startingSceneId);
-      
+
       toast({
         title: "Quest Started",
         description: `You have begun: ${quest.title}`,
         variant: "default"
       });
-      
+
     } catch (error) {
       console.error("%cError loading scenes:", "color: red; font-weight: bold;", error);
       toast({
@@ -285,7 +294,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.error("Cannot complete scene: gameState is null");
       return;
     }
-    
+
     console.log("=== Complete Scene Debug ===");
     console.log("Completing scene with outcome:", outcome);
     console.log("Current scene ID:", gameState.currentScene.id);
@@ -321,7 +330,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         const selectedChoice = currentScene.choices.find((c: any) => c.id === outcome);
         nextSceneId = selectedChoice ? selectedChoice.nextScene : currentScene.defaultNextScene;
       }
-      
+
       console.log("Next scene ID:", nextSceneId);
 
       // If we reached the end of the quest
@@ -340,7 +349,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             }
             return q;
           });
-          
+
           const updatedGameState = {
             ...prev,
             quests: {
@@ -350,14 +359,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
               available: updatedAvailable
             }
           };
-          
+
           // Save to localStorage
           try {
             localStorage.setItem('percyJacksonGameState', JSON.stringify(updatedGameState));
           } catch (error) {
             console.error("Failed to save completed quest state to localStorage:", error);
           }
-          
+
           return updatedGameState;
         });
 
@@ -382,13 +391,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         });
         return;
       }
-      
+
       console.log("Next scene data:", nextScene);
 
       // Update game state with the next scene
       setGameState(prev => {
         if (!prev) return prev;
-        
+
         const updatedGameState = {
           ...prev,
           currentScene: {
@@ -399,19 +408,19 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             totalPanels: nextScene.panels?.length || 1
           }
         };
-        
+
         // Save to localStorage
         try {
           localStorage.setItem('percyJacksonGameState', JSON.stringify(updatedGameState));
         } catch (error) {
           console.error("Failed to save updated scene state to localStorage:", error);
         }
-        
+
         return updatedGameState;
       });
-      
+
       console.log("Scene completed successfully");
-      
+
     } catch (error) {
       console.error("Error completing scene:", error);
       toast({

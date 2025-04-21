@@ -130,14 +130,22 @@ export default function QuestSelection() {
               <div className="mt-3 text-right">
                 <Button 
                   className="bg-accent text-white px-3 py-1"
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.preventDefault();
-                    e.stopPropagation();
                     e.stopPropagation();
                     console.log("Starting quest from button:", questState.id);
                     const questDetails = quests.find(q => q.id === questState.id);
                     if (questDetails) {
-                      handleQuestSelect(questState.id);
+                      // Get the first scene data
+                      const scenesModule = await import("@/data/scenes");
+                      const scenes = scenesModule.default;
+                      const firstScene = scenes.find(s => s.id === questDetails.startingSceneId);
+                      
+                      if (firstScene) {
+                        await handleQuestSelect(questState.id);
+                      } else {
+                        console.error("Could not find first scene for quest:", questState.id);
+                      }
                     }
                   }}
                 >
