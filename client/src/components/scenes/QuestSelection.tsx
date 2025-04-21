@@ -6,13 +6,22 @@ export default function QuestSelection() {
   const { gameState, startQuest } = useGameContext();
   
   const handleQuestSelect = (questId: number) => {
-    console.log("=== Quest Selection Debug ===");
-    console.log("Quest selected:", questId);
+    console.log("%c=== Quest Selection Debug ===", "color: #4CAF50; font-weight: bold;");
+    console.log("%cQuest ID:", "font-weight: bold;", questId);
     const questInState = gameState.quests.available.find(q => q.id === questId);
     const questDetails = quests.find(q => q.id === questId);
-    console.log("Quest in state:", questInState);
-    console.log("Quest details:", questDetails);
-    console.log("Current game state:", gameState);
+    console.log("%cQuest in state:", "font-weight: bold;", questInState);
+    console.log("%cQuest details:", "font-weight: bold;", questDetails);
+    console.log("%cCurrent game state:", "font-weight: bold;", gameState);
+    
+    if (!questInState) {
+      console.error("Quest not found in game state!");
+      return;
+    }
+    if (!questDetails) {
+      console.error("Quest details not found!");
+      return;
+    }
     
     if (questInState && questInState.status === "available" && questDetails) {
       console.log("Starting quest:", questId);

@@ -139,10 +139,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   // Save the current game state
   const saveGame = () => {
     if (!gameState) return;
-    
+
     try {
       localStorage.setItem('percyJacksonGameState', JSON.stringify(gameState));
-      
+
       // In a real implementation, this would save to the server as well
       // This is commented out since we don't have a real backend setup yet
       // apiRequest('POST', '/api/game-state', {
@@ -168,17 +168,17 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     console.log("Current game state before starting quest:", gameState);
-    
+
     // Find the quest
     const quest = quests.find(q => q.id === questId);
     if (!quest) {
       console.error("Cannot start quest: quest not found with ID", questId);
       return;
     }
-    
+
     console.log("Starting quest:", quest.title);
     console.log("Starting scene ID:", quest.startingSceneId);
-    
+
     // Import scenes dynamically to get the first scene type
     import("@/data/scenes").then(module => {
       console.log("=== Scene Loading Debug ===");
@@ -186,16 +186,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       console.log("Available scenes:", scenes);
       const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
       console.log("First scene found:", firstScene);
-      
+
       if (!firstScene) {
         console.error("First scene not found:", quest.startingSceneId);
         return;
       }
-      
+
       // Update game state with correct scene type
       setGameState(prev => {
         if (!prev) return prev;
-        
+
         const updatedState = {
           ...prev,
           quests: {
@@ -210,27 +210,29 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             totalPanels: firstScene.panels?.length || 1
           }
         };
-        
+
         console.log("Updated game state:", updatedState);
         return updatedState;
       });
+    }).catch(error => {
+      console.error("%cError loading scenes:", "color: red; font-weight: bold;", error);
     });
   };
 
   // Complete a scene and determine the next scene
   const completeScene = (outcome: string) => {
     if (!gameState) return;
-    
+
     // Find the current scene
     import("@/data/scenes").then(module => {
       const scenes = module.default;
       const currentScene = scenes.find((s: any) => s.id === gameState.currentScene.id);
-      
+
       if (!currentScene) return;
-      
+
       // Determine the next scene ID based on outcome
       let nextSceneId = "";
-      
+
       if (currentScene.type === "story") {
         nextSceneId = currentScene.nextScene;
       } else if (currentScene.type === "puzzle") {
@@ -241,15 +243,15 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         const selectedChoice = currentScene.choices.find((c: any) => c.id === outcome);
         nextSceneId = selectedChoice ? selectedChoice.nextScene : currentScene.defaultNextScene;
       }
-      
+
       // If we reached the end of the quest
       if (!nextSceneId || nextSceneId === "end") {
         // Complete the quest
         const questId = gameState.currentScene.questId;
-        
+
         setGameState(prev => {
           if (!prev) return prev;
-          
+
           // Unlock the next quest if applicable
           const updatedAvailable = prev.quests.available.map(q => {
             if (q.id === questId + 1) {
@@ -257,7 +259,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             }
             return q;
           });
-          
+
           return {
             ...prev,
             quests: {
@@ -268,25 +270,25 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             }
           };
         });
-        
+
         toast({
           title: "Quest Completed!",
           description: "You have successfully completed the quest.",
           variant: "success"
         });
-        
+
         return;
       }
-      
+
       // Find the next scene
       const nextScene = scenes.find((s: any) => s.id === nextSceneId);
-      
+
       if (!nextScene) return;
-      
+
       // Update game state with the next scene
       setGameState(prev => {
         if (!prev) return prev;
-        
+
         return {
           ...prev,
           currentScene: {
@@ -303,10 +305,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   // Update scene progress (e.g., current panel in a story scene)
   const updateSceneProgress = (progress: Partial<SceneState>) => {
     if (!gameState) return;
-    
+
     setGameState(prev => {
       if (!prev) return prev;
-      
+
       return {
         ...prev,
         currentScene: {
@@ -320,15 +322,15 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   // Update player stats
   const updatePlayerStats = (stats: Partial<Player>) => {
     if (!gameState) return;
-    
+
     setGameState(prev => {
       if (!prev) return prev;
-      
+
       const updatedPlayer = {
         ...prev.player,
         ...stats
       };
-      
+
       // Check if player has enough XP to level up
       const xpThreshold = updatedPlayer.level * 100;
       if (updatedPlayer.xp >= xpThreshold) {
@@ -338,14 +340,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         updatedPlayer.health = updatedPlayer.maxHealth;
         updatedPlayer.maxEnergy += 5;
         updatedPlayer.energy = updatedPlayer.maxEnergy;
-        
+
         toast({
           title: "Level Up!",
           description: `You are now level ${updatedPlayer.level}. Your health and energy have increased!`,
           variant: "success"
         });
       }
-      
+
       return {
         ...prev,
         player: updatedPlayer
