@@ -164,12 +164,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("=== Start Quest Debug ===");
     console.log("Starting quest with ID:", questId);
 
+    // Validate game state
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
     }
 
-    // Find the quest
+    // Find and validate quest
     const quest = quests.find(q => q.id === questId);
     if (!quest) {
       console.error("Cannot start quest: quest not found with ID", questId);
@@ -177,7 +178,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      // Load scenes data to get starting scene
+      // Load and validate first scene
       const module = await import("@/data/scenes");
       const scenes = module.default;
       const firstScene = scenes.find(s => s.id === quest.startingSceneId);
@@ -187,12 +188,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Update game state immediately with the new quest and scene
-      const newState = {
-        ...gameState,
+      // Create new state with explicit quest and scene data
+      const newState: GameStateData = {
+        player: gameState.player,
         quests: {
-          ...gameState.quests,
-          current: questId
+          completed: gameState.quests.completed,
+          current: questId, // Set current quest ID
+          available: gameState.quests.available.map(q => ({
+            ...q,
+            status: q.id === questId ? "active" : q.status
+          }))
         },
         currentScene: {
           type: firstScene.type,
@@ -203,15 +208,20 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         }
       };
 
-      // Save to localStorage
-      try {
-        localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
-      } catch (error) {
-        console.error("Failed to save game state:", error);
-      }
+      // Update state and save to localStorage atomically
+      await Promise.all([
+        new Promise<void>(resolve => {
+          setGameState(newState);
+          resolve();
+        }),
+        new Promise<void>(resolve => {
+          localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+          resolve();
+        })
+      ]);
 
-      setGameState(newState);
-
+      console.log("Quest started successfully. New state:", newState);
+      
       toast({
         title: "Quest Started",
         description: `You have begun: ${quest.title}`,
