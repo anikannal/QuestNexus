@@ -194,6 +194,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         }
       };
 
+      // Log the new state for debugging
+      console.log("New state in startQuest:", newState);
+
       // Save to localStorage inside the state update
       localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
       
@@ -203,8 +206,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         variant: "default"
       });
 
-      return newState;
-    });
+      setGameState((prevState) => {
+        console.log("Previous state:", prevState);
+        console.log("Updated state:", newState);
+        return newState;
+      });
   };
 
   // Complete a scene and determine the next scene
@@ -217,6 +223,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("=== Complete Scene Debug ===");
     console.log("Completing scene with outcome:", outcome);
     console.log("Current scene ID:", gameState.currentScene.id);
+    console.log("Current gameState before completing scene:", gameState);
+
 
     try {
       // Find the current scene
@@ -285,6 +293,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           } catch (error) {
             console.error("Failed to save completed quest state to localStorage:", error);
           }
+          console.log("Updated gameState after completing scene:", updatedGameState);
 
           return updatedGameState;
         });
