@@ -22,6 +22,25 @@ export default function QuestSelection() {
     if (questInState.status === "available") {
       console.log("Starting quest:", questId);
       try {
+        // Import the scenes data here
+        const scenesModule = await import("@/data/scenes");
+        const scenes = scenesModule.default;
+        console.log("Available scenes:", scenes);
+        
+        // Find the first scene
+        const firstSceneId = questDetails.startingSceneId;
+        const firstScene = scenes.find(s => s.id === firstSceneId);
+        console.log("First scene:", firstScene);
+        
+        if (firstScene) {
+          console.log("Using directly found scene with ID:", firstScene.id);
+          console.log("Scene questId:", firstScene.questId);
+          
+          // Print what we're about to send to startQuest
+          console.log("Will start quest with ID:", questId);
+        }
+        
+        // Now start the quest with the right ID
         await startQuest(questId);
         console.log("Quest started successfully");
       } catch (error) {
@@ -33,13 +52,13 @@ export default function QuestSelection() {
   };
   
   // Function to begin the first available quest directly
-  const startFirstAvailableQuest = () => {
+  const startFirstAvailableQuest = async () => {
     console.log("Attempting to start first available quest");
     // Find the first available quest
     const firstAvailableQuest = gameState.quests.available.find(q => q.status === "available");
     if (firstAvailableQuest) {
       console.log("Found first available quest:", firstAvailableQuest);
-      startQuest(firstAvailableQuest.id);
+      await handleQuestSelect(firstAvailableQuest.id);
     } else {
       console.log("No available quests found");
     }

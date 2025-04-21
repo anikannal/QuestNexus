@@ -208,11 +208,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Create the updated scene object
+      // WORKAROUND: Use the scene questId from the data file since that's the one defined in scenes.ts
+      // Ensure we preserve this questId in the scene data
+      const sceneQuestId = firstScene.questId || questId;
+      console.log("Using scene questId:", sceneQuestId);
+      
+      // Create the properly typed scene object
       const updatedScene = {
         type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
         id: quest.startingSceneId,
-        questId: questId,
+        questId: sceneQuestId, // Use the questId from the scene data first
         currentPanel: 1,
         totalPanels: firstScene.panels?.length || 1
       };
@@ -244,23 +249,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         
         return updatedGameState;
       });
-      
-      // Add a very short delay and update state again to ensure correct rendering
-      setTimeout(() => {
-        console.log("Performing follow-up update to ensure scene loaded correctly");
-        setGameState(prev => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            currentScene: {
-              ...prev.currentScene,
-              type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
-              id: quest.startingSceneId,
-              questId: questId
-            }
-          };
-        });
-      }, 50);
       
       console.log("Quest started successfully");
       console.log("Starting quest:", quest.title);
