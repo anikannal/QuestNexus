@@ -160,16 +160,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = async (questId: number, sceneData?: {id: string, questId: number}) => {
+  const startQuest = (questId: number) => {
     console.log("=== Start Quest Debug ===");
-    console.log("Attempting to start quest:", questId);
-    console.log("Scene data provided:", sceneData);
+    console.log("Starting quest with ID:", questId);
 
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
     }
-    console.log("Current game state before starting quest:", gameState);
 
     // Find the quest
     const quest = quests.find(q => q.id === questId);
@@ -178,114 +176,40 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // Hard-coded validation for starting scene - critical for quest starting
-    if (!quest.startingSceneId) {
-      console.error("Quest has no starting scene ID:", quest);
-      toast({
-        title: "Error Starting Quest",
-        description: "This quest doesn't have a starting scene defined.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // Update game state immediately with the new quest and scene
+    setGameState(prev => {
+      if (!prev) return prev;
 
-    console.log("Starting quest with ID:", questId);
-    console.log("Starting scene ID:", quest.startingSceneId);
-
-    try {
-      // Import scenes first to ensure we have all the data
-      const module = await import("@/data/scenes");
-      const scenes = module.default;
-      const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
-
-      console.log("First scene found:", firstScene);
-
-      if (!firstScene) {
-        console.error("First scene not found with ID:", quest.startingSceneId);
-        toast({
-          title: "Error Starting Quest",
-          description: `Could not find starting scene for quest: ${quest.title}`,
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // CRITICAL FIX: If sceneData is provided, use it. Otherwise, try to get it from the first scene
-      // Extract questId directly from the scene object - this is crucial to fix the issue
-      const sceneQuestId = 
-        // First priority: Use the questId from the provided sceneData if available
-        (sceneData?.questId) ||
-        // Second priority: Use the questId from the scene in data file
-        firstScene.questId || 
-        // Fallback: Use the quest ID as passed to this function
-        questId;
-
-      console.log("Final questId being used:", sceneQuestId);
-
-      // Create the properly typed scene object with a KNOWN type and CORRECT questId
-      const updatedScene = {
-        type: firstScene.type as "story" | "puzzle" | "battle" | "decision",
-        id: quest.startingSceneId,
-        questId: sceneQuestId, // CRITICAL: This will now be 1 from the scenes.ts file
-        currentPanel: 1,
-        totalPanels: firstScene.panels?.length || 1
+      const newState = {
+        ...prev,
+        quests: {
+          ...prev.quests,
+          current: questId
+        },
+        currentScene: {
+          type: "story",
+          id: quest.startingSceneId,
+          questId: questId,
+          currentPanel: 1,
+          totalPanels: 1
+        }
       };
 
-      console.log("Updated scene object:", updatedScene);
-
-      // Update game state with the correctly formed scene object
-      const updatedGameState = await new Promise(resolve => {
-        setGameState(prev => {
-          if (!prev) return prev;
-
-          // Create updated game state
-          const newState = {
-            ...prev,
-            quests: {
-              ...prev.quests,
-              current: questId
-            },
-            currentScene: updatedScene
-          };
-
-          console.log("Updated game state:", newState);
-
-          // Also save to localStorage for persistence
-          try {
-            localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
-          } catch (error) {
-            console.error("Failed to save updated game state to localStorage:", error);
-          }
-
-          resolve(newState);
-          return newState;
-        });
-      });
-
-      // Verify the update was successful
-      if (updatedGameState.currentScene.questId === 0) {
-        console.error("Failed to update quest ID properly");
-        throw new Error("Quest ID update failed");
+      // Save to localStorage
+      try {
+        localStorage.setItem('percyJacksonGameState', JSON.stringify(newState));
+      } catch (error) {
+        console.error("Failed to save game state:", error);
       }
 
-      console.log("Quest started successfully");
-      console.log("Starting quest:", quest.title);
-      console.log("Starting scene ID:", quest.startingSceneId);
+      return newState;
+    });
 
-      toast({
-        title: "Quest Started",
-        description: `You have begun: ${quest.title}`,
-        variant: "default"
-      });
-
-    } catch (error) {
-      console.error("%cError loading scenes:", "color: red; font-weight: bold;", error);
-      toast({
-        title: "Error Starting Quest",
-        description: "An error occurred while starting the quest. Please try again.",
-        variant: "destructive"
-      });
-    }
+    toast({
+      title: "Quest Started",
+      description: `You have begun: ${quest.title}`,
+      variant: "default"
+    });
   };
 
   // Complete a scene and determine the next scene

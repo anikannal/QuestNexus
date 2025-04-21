@@ -5,63 +5,16 @@ import { Button } from "@/components/ui/button";
 export default function QuestSelection() {
   const { gameState, startQuest } = useGameContext();
   
-  const handleQuestSelect = async (questId: number) => {
-    console.log("%c=== Quest Selection Debug ===", "color: #4CAF50; font-weight: bold;");
-    console.log("%cQuest ID:", "font-weight: bold;", questId);
+  const handleQuestSelect = (questId: number) => {
     const questInState = gameState.quests.available.find(q => q.id === questId);
-    const questDetails = quests.find(q => q.id === questId);
-    console.log("%cQuest in state:", "font-weight: bold;", questInState);
-    console.log("%cQuest details:", "font-weight: bold;", questDetails);
-    console.log("%cCurrent game state:", "font-weight: bold;", gameState);
     
-    if (!questInState || !questDetails) {
+    if (!questInState) {
       console.error("Quest not found!");
       return;
     }
     
     if (questInState.status === "available") {
-      console.log("Starting quest:", questId);
-      try {
-        // Import the scenes data here
-        const scenesModule = await import("@/data/scenes");
-        const scenes = scenesModule.default;
-        console.log("Available scenes:", scenes);
-        
-        // Find the first scene
-        const firstSceneId = questDetails.startingSceneId;
-        const firstScene = scenes.find(s => s.id === firstSceneId);
-        console.log("First scene:", firstScene);
-        
-        // CRITICAL FIX: Create a sceneData object to pass to startQuest
-        if (firstScene) {
-          console.log("Using directly found scene with ID:", firstScene.id);
-          console.log("Scene questId:", firstScene.questId);
-          
-          // Now start the quest with explicit scene data to ensure correct questId
-          const sceneQuestId = firstScene.questId || questId;
-          console.log("Will start quest with ID:", questId);
-          console.log("Will use scene questId:", sceneQuestId);
-          
-          // Pass both the questId and the scene data to startQuest
-          await startQuest(questId, {
-            id: firstScene.id,
-            questId: sceneQuestId 
-          });
-          
-          console.log("Quest started successfully");
-        } else {
-          // Fallback if scene not found
-          console.error("Scene not found, using fallback");
-          // Create explicit scene data to avoid questId=0 issue
-          await startQuest(questId, {
-            id: questDetails.startingSceneId,
-            questId: questId
-          });
-          console.log("Quest started with explicit scene data");
-        }
-      } catch (error) {
-        console.error("Error starting quest:", error);
-      }
+      startQuest(questId);
     } else {
       console.log("Quest not available");
     }
