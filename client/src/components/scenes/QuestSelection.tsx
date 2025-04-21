@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function QuestSelection() {
   const { gameState, startQuest } = useGameContext();
   
-  const handleQuestSelect = (questId: number) => {
+  const handleQuestSelect = async (questId: number) => {
     console.log("%c=== Quest Selection Debug ===", "color: #4CAF50; font-weight: bold;");
     console.log("%cQuest ID:", "font-weight: bold;", questId);
     const questInState = gameState.quests.available.find(q => q.id === questId);
@@ -14,20 +14,21 @@ export default function QuestSelection() {
     console.log("%cQuest details:", "font-weight: bold;", questDetails);
     console.log("%cCurrent game state:", "font-weight: bold;", gameState);
     
-    if (!questInState) {
-      console.error("Quest not found in game state!");
-      return;
-    }
-    if (!questDetails) {
-      console.error("Quest details not found!");
+    if (!questInState || !questDetails) {
+      console.error("Quest not found!");
       return;
     }
     
-    if (questInState && questInState.status === "available" && questDetails) {
+    if (questInState.status === "available") {
       console.log("Starting quest:", questId);
-      startQuest(questId);
+      try {
+        await startQuest(questId);
+        console.log("Quest started successfully");
+      } catch (error) {
+        console.error("Error starting quest:", error);
+      }
     } else {
-      console.log("Quest not available or not found");
+      console.log("Quest not available");
     }
   };
   
