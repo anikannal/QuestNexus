@@ -20,6 +20,7 @@ export default function Home() {
 
   const handleNewGame = () => {
     initializeNewGame();
+    navigate("/game");
   };
 
   return (
