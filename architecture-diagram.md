@@ -1,101 +1,102 @@
 # QuestNexus Architecture Diagram
 
+System Architecture (graph TD)
 ```mermaid
 graph TD
+
     %% Client-side components
     subgraph Frontend["Frontend (React + TypeScript)"]
-        App["App.tsx\n(Main Application)"]
-        Router["Router\n(wouter)"]
-        Pages["Pages\n(Home, Game, NotFound)"]
-        GameContainer["GameContainer\n(Main Game Layout)"]
+        App["App.tsx - Main Application"]
+        Router["Router (wouter)"]
+        Pages["Pages (Home, Game, NotFound)"]
+        GameContainer["GameContainer - Main Game Layout"]
         
         subgraph GameComponents["Game Components"]
-            SceneComponents["Scene Components\n(Story, Battle, Puzzle, Decision)"]
-            PlayerComponents["Player Components\n(Dashboard, Inventory)"]
-            LayoutComponents["Layout Components\n(Header, Footer)"]
+            SceneComponents["Scene Components: Story, Battle, Puzzle, Decision"]
+            PlayerComponents["Player Components: Dashboard, Inventory"]
+            LayoutComponents["Layout Components: Header, Footer"]
         end
         
         subgraph StateManagement["State Management"]
-            GameContext["GameContext\n(Game State Provider)"]
-            LocalStorage["LocalStorage\n(Game State Persistence)"]
+            GameContext["GameContext - Game State Provider"]
+            LocalStorage["LocalStorage - Game State Persistence"]
         end
         
         subgraph UIComponents["UI Components"]
-            ShadcnUI["Shadcn UI Components\n(Button, Card, Dialog, etc.)"]
+            ShadcnUI["Shadcn UI Components"]
         end
         
         subgraph ClientData["Client-side Data"]
-            QuestsData["quests.ts\n(Quest Definitions)"]
-            ScenesData["scenes.ts\n(Scene Definitions)"]
+            QuestsData["quests.ts - Quest Definitions"]
+            ScenesData["scenes.ts - Scene Definitions"]
         end
     end
-    
+
     %% Server-side components
     subgraph Backend["Backend (Express.js)"]
-        Server["server/index.ts\n(Express Server)"]
-        Routes["server/routes.ts\n(API Endpoints)"]
-        Storage["server/storage.ts\n(Data Access Layer)"]
-        DB["server/db.ts\n(Database Connection)"]
+        Server["server/index.ts - Express Server"]
+        Routes["server/routes.ts - API Endpoints"]
+        Storage["server/storage.ts - Data Access Layer"]
+        DB["server/db.ts - Database Connection"]
     end
-    
+
     %% Database
     subgraph Database["Database (PostgreSQL)"]
         Users["Users Table"]
         GameStates["Game States Table"]
     end
-    
+
     %% Shared components
     subgraph Shared["Shared"]
-        Schema["schema.ts\n(Data Models & Validation)"]
+        Schema["schema.ts - Data Models and Validation"]
     end
-    
+
+    %% API
+    subgraph API["API Endpoints"]
+        GameStateAPI["GET/POST /api/game-state/:userId"]
+        QuestsAPI["GET /api/quests"]
+        ScenesAPI["GET /api/scenes/:sceneId"]
+    end
+
     %% Connections
     App --> Router
     Router --> Pages
     Pages --> GameContainer
     GameContainer --> GameComponents
     GameContainer --> StateManagement
-    
+
     GameComponents --> StateManagement
     StateManagement --> LocalStorage
-    StateManagement -.-> API
-    
+    StateManagement --> API
     GameComponents --> UIComponents
     GameComponents --> ClientData
-    
+
     Server --> Routes
     Routes --> Storage
     Storage --> DB
     DB --> Database
-    
+
     Storage --> ClientData
-    
+
     Schema --> Storage
     Schema --> StateManagement
-    
-    %% API Connection
-    subgraph API["API Endpoints"]
-        GameStateAPI["GET/POST /api/game-state/:userId"]
-        QuestsAPI["GET /api/quests"]
-        ScenesAPI["GET /api/scenes/:sceneId"]
-    end
-    
-    Routes --> API
-    StateManagement -.-> API
-end
 
-%% Data Flow Diagram
-flowchart LR
-    subgraph DataFlow["Game Data Flow"]
-        direction LR
-        A[User Action] --> B[GameContext]
-        B --> C[State Update]
-        C --> D[Component Re-render]
-        C --> E[LocalStorage Save]
-        C -.-> F[API Call]
-        F -.-> G[Database Update]
-    end
+    Routes --> API
+    StateManagement --> API
+ 
 ```
+
+```mermaid
+graph LR
+    %% Game Data Flow
+    A[User Action] --> B[GameContext]
+    B --> C[State Update]
+    C --> D[Component Re-render]
+    C --> E[LocalStorage Save]
+    C --> F[API Call]
+    F --> G[Database Update]
+```
+
 
 ## Architecture Overview
 
