@@ -52,8 +52,12 @@ export default function QuestSelection() {
         } else {
           // Fallback if scene not found
           console.error("Scene not found, using fallback");
-          await startQuest(questId);
-          console.log("Quest started with fallback method");
+          // Create explicit scene data to avoid questId=0 issue
+          await startQuest(questId, {
+            id: questDetails.startingSceneId,
+            questId: questId
+          });
+          console.log("Quest started with explicit scene data");
         }
       } catch (error) {
         console.error("Error starting quest:", error);
@@ -129,8 +133,12 @@ export default function QuestSelection() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Starting quest:", questState.id);
-                    handleQuestSelect(questState.id);
+                    e.stopPropagation();
+                    console.log("Starting quest from button:", questState.id);
+                    const questDetails = quests.find(q => q.id === questState.id);
+                    if (questDetails) {
+                      handleQuestSelect(questState.id);
+                    }
                   }}
                 >
                   Begin Quest
