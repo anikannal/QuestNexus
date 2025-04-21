@@ -176,30 +176,38 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     console.log("Starting quest:", quest.title);
     console.log("Starting scene ID:", quest.startingSceneId);
     
-    // Get the first scene from the quest
-    const firstSceneId = quest.startingSceneId;
-    
-    // Update game state
-    setGameState(prev => {
-      if (!prev) return prev;
+    // Import scenes dynamically to get the first scene type
+    import("@/data/scenes").then(module => {
+      const scenes = module.default;
+      const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
       
-      const updatedState = {
-        ...prev,
-        quests: {
-          ...prev.quests,
-          current: questId
-        },
-        currentScene: {
-          type: "story",
-          id: firstSceneId,
-          questId: questId,
-          currentPanel: 1,
-          totalPanels: 1
-        }
-      };
+      if (!firstScene) {
+        console.error("First scene not found:", quest.startingSceneId);
+        return;
+      }
       
-      console.log("Updated game state:", updatedState);
-      return updatedState;
+      // Update game state with correct scene type
+      setGameState(prev => {
+        if (!prev) return prev;
+        
+        const updatedState = {
+          ...prev,
+          quests: {
+            ...prev.quests,
+            current: questId
+          },
+          currentScene: {
+            type: firstScene.type || "story",
+            id: quest.startingSceneId,
+            questId: questId,
+            currentPanel: 1,
+            totalPanels: firstScene.panels?.length || 1
+          }
+        };
+        
+        console.log("Updated game state:", updatedState);
+        return updatedState;
+      });
     });
   };
 
