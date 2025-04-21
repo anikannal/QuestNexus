@@ -176,23 +176,38 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // Update quest state immediately
-    setGameState(prev => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        quests: {
-          ...prev.quests,
-          current: questId
-        }
-      };
-    });
-
-    console.log("Starting quest:", quest.title);
-    console.log("Starting scene ID:", quest.startingSceneId);
-
-    // Import scenes dynamically to get the first scene type
+    // Import scenes first to ensure we have all the data
     import("@/data/scenes").then(module => {
+      console.log("=== Scene Loading Debug ===");
+      const scenes = module.default;
+      const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
+      
+      if (!firstScene) {
+        console.error("First scene not found:", quest.startingSceneId);
+        return;
+      }
+
+      // Update both quest and scene state together
+      setGameState(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          quests: {
+            ...prev.quests,
+            current: questId
+          },
+          currentScene: {
+            type: firstScene.type || "story",
+            id: quest.startingSceneId,
+            questId: questId,
+            currentPanel: 1,
+            totalPanels: firstScene.panels?.length || 1
+          }
+        };
+      });
+
+      console.log("Starting quest:", quest.title);
+      console.log("Starting scene ID:", quest.startingSceneId);
       console.log("=== Scene Loading Debug ===");
       const scenes = module.default;
       console.log("Available scenes:", scenes);
@@ -204,24 +219,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Update game state with correct scene type
-      setGameState(prev => {
-        if (!prev) return prev;
-
-        const updatedState = {
-          ...prev,
-          currentScene: {
-            type: firstScene.type || "story",
-            id: quest.startingSceneId,
-            questId: questId,
-            currentPanel: 1,
-            totalPanels: firstScene.panels?.length || 1
-          }
-        };
-
-        console.log("Updated game state:", updatedState);
-        return updatedState;
-      });
+      console.log("Updated game state with quest and scene");
     }).catch(error => {
       console.error("%cError loading scenes:", "color: red; font-weight: bold;", error);
     });
