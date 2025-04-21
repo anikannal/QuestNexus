@@ -84,7 +84,9 @@ export default function QuestSelection() {
                 <Button 
                   className="bg-accent text-white px-3 py-1"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent double-clicking issue
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Starting quest:", questState.id);
                     handleQuestSelect(questState.id);
                   }}
                 >
