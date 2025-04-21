@@ -99,8 +99,7 @@ interface GameContextProps {
 //  updatePlayerStats: () => {}
 //});
 
-let GameContext: React.Context<GameContextProps>;
-
+const GameContext = createContext<GameContextProps | null>(null);
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
@@ -450,20 +449,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Initialize the context lazily
-  if (!GameContext) {
-    GameContext = createContext<GameContextProps>({
-      gameState: gameState || initialGameState,
-      initializeNewGame,
-      loadGame,
-      saveGame,
-      startQuest,
-      completeScene,
-      updateSceneProgress,
-      updatePlayerStats
-    });
-  }
-
   // Context value
   const contextValue: GameContextProps = {
     gameState: gameState || initialGameState,
@@ -481,8 +466,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
 // Custom hook for using the game context
 export const useGameContext = () => {
-  if (!GameContext) {
-    throw new Error("GameContext is not initialized. Ensure GameProvider is rendered.");
+  const context = useContext(GameContext);
+  if (!context) {
+    throw new Error("useGameContext must be used within a GameProvider");
   }
-  return useContext(GameContext);
+  return context;
 };
