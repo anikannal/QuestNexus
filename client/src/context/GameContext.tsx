@@ -161,10 +161,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   // Start a new quest
   const startQuest = (questId: number) => {
+    console.log("=== Start Quest Debug ===");
+    console.log("Attempting to start quest:", questId);
     if (!gameState) {
       console.error("Cannot start quest: gameState is null");
       return;
     }
+    console.log("Current game state before starting quest:", gameState);
     
     // Find the quest
     const quest = quests.find(q => q.id === questId);
@@ -178,8 +181,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     
     // Import scenes dynamically to get the first scene type
     import("@/data/scenes").then(module => {
+      console.log("=== Scene Loading Debug ===");
       const scenes = module.default;
+      console.log("Available scenes:", scenes);
       const firstScene = scenes.find((s: any) => s.id === quest.startingSceneId);
+      console.log("First scene found:", firstScene);
       
       if (!firstScene) {
         console.error("First scene not found:", quest.startingSceneId);
