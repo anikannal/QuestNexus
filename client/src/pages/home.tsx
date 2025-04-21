@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGameContext } from "@/context/GameContext";
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const { gameState, loadGame, initializeNewGame } = useGameContext();
+  const [_, navigate] = useLocation();
   const [hasSavedGame, setHasSavedGame] = useState(false);
 
   useEffect(() => {
