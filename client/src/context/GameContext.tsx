@@ -176,6 +176,18 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    // Update quest state immediately
+    setGameState(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        quests: {
+          ...prev.quests,
+          current: questId
+        }
+      };
+    });
+
     console.log("Starting quest:", quest.title);
     console.log("Starting scene ID:", quest.startingSceneId);
 
@@ -198,10 +210,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
         const updatedState = {
           ...prev,
-          quests: {
-            ...prev.quests,
-            current: questId
-          },
           currentScene: {
             type: firstScene.type || "story",
             id: quest.startingSceneId,
