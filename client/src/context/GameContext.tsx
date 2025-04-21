@@ -158,11 +158,20 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   // Start a new quest
   const startQuest = (questId: number) => {
-    if (!gameState) return;
+    if (!gameState) {
+      console.error("Cannot start quest: gameState is null");
+      return;
+    }
     
     // Find the quest
     const quest = quests.find(q => q.id === questId);
-    if (!quest) return;
+    if (!quest) {
+      console.error("Cannot start quest: quest not found with ID", questId);
+      return;
+    }
+    
+    console.log("Starting quest:", quest.title);
+    console.log("Starting scene ID:", quest.startingSceneId);
     
     // Get the first scene from the quest
     const firstSceneId = quest.startingSceneId;
@@ -171,7 +180,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setGameState(prev => {
       if (!prev) return prev;
       
-      return {
+      const updatedState = {
         ...prev,
         quests: {
           ...prev.quests,
@@ -185,6 +194,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           totalPanels: 1
         }
       };
+      
+      console.log("Updated game state:", updatedState);
+      return updatedState;
     });
   };
 
