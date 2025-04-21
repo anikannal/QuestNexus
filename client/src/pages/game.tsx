@@ -9,12 +9,10 @@ export default function Game() {
 
   // Check if game has been initialized
   useEffect(() => {
-    if (!gameState) {
-      navigate("/");
-    }
-  }, [gameState, navigate]);
+    console.log("Game component mounted, gameState:", gameState);
+  }, [gameState]);
 
-  if (!gameState) return null;
+  // We should NOT redirect or return null since we're using initialGameState as fallback
 
   return <GameContainer />;
 }

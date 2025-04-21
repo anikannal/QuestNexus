@@ -107,8 +107,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
   // Initialize a new game
   const initializeNewGame = () => {
+    console.log("Initializing new game with state:", initialGameState);
     setGameState({...initialGameState});
+    console.log("After setting game state");
     navigate("/game");
+    console.log("Navigated to game page");
   };
 
   // Load a saved game from localStorage

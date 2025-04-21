@@ -1,5 +1,6 @@
 import { useGameContext } from "@/context/GameContext";
 import quests from "@/data/quests";
+import { Button } from "@/components/ui/button";
 
 export default function QuestSelection() {
   const { gameState, startQuest } = useGameContext();
@@ -19,9 +20,30 @@ export default function QuestSelection() {
     }
   };
   
+  // Function to begin the first available quest directly
+  const startFirstAvailableQuest = () => {
+    console.log("Attempting to start first available quest");
+    // Find the first available quest
+    const firstAvailableQuest = gameState.quests.available.find(q => q.status === "available");
+    if (firstAvailableQuest) {
+      console.log("Found first available quest:", firstAvailableQuest);
+      startQuest(firstAvailableQuest.id);
+    } else {
+      console.log("No available quests found");
+    }
+  };
+  
   return (
     <div id="questSelection" className="bg-white/90 rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-      <h2 className="font-heading text-2xl text-primary mb-6 border-b border-secondary pb-2">Available Quests at Camp Half-Blood</h2>
+      <div className="flex justify-between items-center mb-6 border-b border-secondary pb-2">
+        <h2 className="font-heading text-2xl text-primary">Available Quests at Camp Half-Blood</h2>
+        <Button 
+          className="bg-primary text-white px-4 py-2"
+          onClick={startFirstAvailableQuest}
+        >
+          Begin First Quest
+        </Button>
+      </div>
       
       {gameState.quests.available.map(questState => {
         const questDetails = quests.find(q => q.id === questState.id);
@@ -54,6 +76,20 @@ export default function QuestSelection() {
               <div className="mt-2 bg-stone/10 rounded p-2 text-sm">
                 <span className="material-icons text-warning inline-block mr-1" style={{ fontSize: "16px" }}>lock</span>
                 <span>Complete "{questDetails.requiredQuestTitle}" to unlock</span>
+              </div>
+            )}
+            
+            {questState.status === "available" && (
+              <div className="mt-3 text-right">
+                <Button 
+                  className="bg-accent text-white px-3 py-1"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent double-clicking issue
+                    handleQuestSelect(questState.id);
+                  }}
+                >
+                  Begin Quest
+                </Button>
               </div>
             )}
           </div>
