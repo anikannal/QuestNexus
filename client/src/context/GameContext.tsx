@@ -165,11 +165,19 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   
     // Ensure the quest object is valid
     if (!quest) {
-      console.error("Quest not found for questId:", questId);
+      toast({
+        title: "Error",
+        description: `Quest not found for questId: ${questId}`,
+        variant: "destructive",
+      });
       return;
     }
   
-    console.log("Quest object:", quest);
+    toast({
+      title: "Debug Info",
+      description: `Quest object: ${JSON.stringify(quest)}`,
+      variant: "info",
+    });
   
     const newState = {
       ...gameState,
