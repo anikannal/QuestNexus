@@ -270,7 +270,7 @@ const scenes = [
       level: 4,
       health: 120,
       baseDamage: 20,
-      initialRage: 30,
+      initialRage: 10,
       description: "A deadly creature from the depths of Tartarus. Its sting contains venom that can kill even a demigod."
     },
     victoryImageDescription: "The player holding the recovered lightning bolt triumphantly",
