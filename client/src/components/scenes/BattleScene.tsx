@@ -120,6 +120,12 @@ export default function BattleScene() {
     }
     
     setBattleLog(actionResult);
+
+    // Update player stats in the global state
+    updatePlayerStats({
+    health: playerHealth,
+    energy: playerEnergy,
+    });
     
     // Enemy turn
     setTimeout(() => {
