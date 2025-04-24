@@ -321,7 +321,292 @@ const scenes = [
       }
     ],
     nextScene: "end"
-  }
+  },
+  
+    // STORY - Arriving at Camp Half-Blood after attack
+    {
+      id: "sea-of-monsters-intro",
+      type: "story",
+      title: "The Sea of Monsters - Camp Under Siege",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "Camp Half-Blood borders smoldering, smoke in the air",
+          dialogue: "Camp's magical borders have been broken. Something terrible is happening.",
+          narration: "You rush to Camp Half-Blood only to find chaos and destruction. Trees are burning and satyrs are injured."
+        },
+        {
+          imageDescription: "Colchis Bull stomping into the clearing with fire trailing its steps",
+          dialogue: "It’s a Colchis Bull! Everyone get back!",
+          narration: "The ground shakes as the massive metal creature charges through, flames licking its bronze hide."
+        }
+      ],
+      nextScene: "colchis-bull-battle"
+    },
+
+    // BATTLE - Colchis Bull
+    {
+      id: "colchis-bull-battle",
+      type: "battle",
+      title: "Battle with the Colchis Bull",
+      questId: 2,
+      imageDescription: "The Colchis Bull breathing fire as campers prepare to fight",
+      introText: "The Colchis Bull is tearing through Camp! You must help stop it before it destroys everything!",
+      enemy: {
+        name: "Colchis Bull",
+        level: 4,
+        health: 120,
+        baseDamage: 25,
+        initialRage: 30,
+        description: "A fire-breathing mechanical bull crafted by Hephaestus. Extremely tough and dangerous."
+      },
+      victoryImageDescription: "The bull crumbling into molten metal",
+      victoryText: "You've defeated the Colchis Bull! The camp is saved, but the damage is great.",
+      defeatImageDescription: "The bull knocks the player back, fire everywhere",
+      defeatText: "You’re overwhelmed, but Tyson jumps in to save you at the last second. The bull retreats.",
+      rewards: {
+        drachmas: 10,
+        xp: 70,
+        items: [
+          {
+            id: "bull-gear",
+            name: "Molten Bull Gear",
+            description: "Still warm from the Colchis Bull's body. Could be useful later.",
+            type: "collectible"
+          }
+        ]
+      },
+      victoryScene: "chiron-explains-fleece",
+      defeatScene: "chiron-explains-fleece"
+    },
+
+    // STORY - Chiron explains about the Fleece
+    {
+      id: "chiron-explains-fleece",
+      type: "story",
+      title: "The Golden Fleece",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "Campers gathered around Chiron in the Big House",
+          dialogue: "The borders failed because Thalia’s tree is dying. Only the Golden Fleece can save it.",
+          narration: "Chiron’s voice is grim. You’ve never seen him so worried."
+        },
+        {
+          imageDescription: "Map showing the Sea of Monsters",
+          dialogue: "The Fleece is located on Polyphemus’s island in the Sea of Monsters. You must retrieve it.",
+          narration: "The quest is dangerous, but necessary. If the Fleece isn’t recovered, the camp is doomed."
+        }
+      ],
+      nextScene: "ship-departure"
+    },
+
+    // STORY - Setting out on the Quest
+    {
+      id: "ship-departure",
+      type: "story",
+      title: "Journey Begins",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "The Princess Andromeda ship at sea",
+          dialogue: "This ship belongs to Luke. Be careful. He’s up to something.",
+          narration: "The journey begins, but trouble is already brewing beneath the surface."
+        }
+      ],
+      nextScene: "sirens-choice"
+    },
+
+    // DECISION - Sirens or Hydra
+    {
+      id: "sirens-choice",
+      type: "decision",
+      title: "A Fork in the Ocean",
+      questId: 2,
+      imageDescription: "The ocean ahead splitting into two currents",
+      dialogue: "One way leads past the Sirens. The other past the Hydra.",
+      narration: "Annabeth and Tyson argue over which path is safer.",
+      followupDialogue: "You must choose quickly. The currents are strong.",
+      choices: [
+        {
+          id: "sirens",
+          title: "Face the Sirens",
+          description: "Temptation lies ahead. But so might knowledge.",
+          hint: "Puzzle-focused path.",
+          nextScene: "sirens-riddle"
+        },
+        {
+          id: "hydra",
+          title: "Face the Hydra",
+          description: "A deadly multi-headed beast awaits.",
+          hint: "Combat-focused path.",
+          nextScene: "hydra-battle"
+        }
+      ],
+      defaultNextScene: "sirens-riddle"
+    },
+
+    // PUZZLE - Sirens Riddle
+    {
+      id: "sirens-riddle",
+      type: "puzzle",
+      title: "Lure of the Sirens",
+      questId: 2,
+      imageDescription: "Beautiful Sirens singing on rocky shores",
+      riddle: "I whisper truths, reveal your fate,\nBut listen close and risk the gate.\nWhat am I?",
+      hint: "Temptation can be dangerous.",
+      correctAnswer: "sirensong",
+      successMessage: "You resist their call and uncover a clue to Polyphemus’s lair.",
+      failureMessage: "You almost drown but are rescued in time. You lose precious time.",
+      successScene: "approach-island",
+      failureScene: "approach-island"
+    },
+
+    // BATTLE - Hydra
+    {
+      id: "hydra-battle",
+      type: "battle",
+      title: "Hydra Battle",
+      questId: 2,
+      imageDescription: "The Hydra rising from the sea with many heads",
+      introText: "A monstrous Hydra blocks your path. Every head you cut grows back two more!",
+      enemy: {
+        name: "Hydra",
+        level: 5,
+        health: 140,
+        baseDamage: 18,
+        initialRage: 25,
+        description: "A regenerating sea monster. It requires strategy to defeat."
+      },
+      victoryImageDescription: "Hydra collapsing into the sea",
+      victoryText: "The Hydra sinks beneath the waves. You move on toward the island.",
+      defeatImageDescription: "Player caught by Hydra tendrils",
+      defeatText: "You’re knocked out but saved by Tyson. You continue, shaken but alive.",
+      rewards: {
+        drachmas: 15,
+        xp: 80,
+        items: [
+          {
+            id: "hydra-scale",
+            name: "Hydra Scale",
+            description: "A rare scale from the sea beast. Magical properties unknown.",
+            type: "collectible"
+          }
+        ]
+      },
+      victoryScene: "approach-island",
+      defeatScene: "approach-island"
+    },
+
+    // STORY - Nearing Polyphemus’s Island
+    {
+      id: "approach-island",
+      type: "story",
+      title: "The Island of the Cyclops",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "The island in the distance with storm clouds above",
+          dialogue: "That’s it. Polyphemus’s island. The Fleece is in there.",
+          narration: "You feel a chill as the island looms closer. The final challenge awaits."
+        }
+      ],
+      nextScene: "polyphemus-battle"
+    },
+
+    // BATTLE - Polyphemus
+    {
+      id: "polyphemus-battle",
+      type: "battle",
+      title: "Battle with Polyphemus",
+      questId: 2,
+      imageDescription: "Polyphemus stomping through jungle, holding a tree as a club",
+      introText: "The Cyclops roars in fury. He guards the Fleece with everything he’s got.",
+      enemy: {
+        name: "Polyphemus",
+        level: 6,
+        health: 150,
+        baseDamage: 30,
+        initialRage: 20,
+        description: "A huge and cunning Cyclops. Not easy to beat with brute strength alone."
+      },
+      victoryImageDescription: "Polyphemus falling backward, stunned",
+      victoryText: "Polyphemus collapses! You snatch the Golden Fleece from its perch.",
+      defeatImageDescription: "Polyphemus roaring triumphantly with the player pinned",
+      defeatText: "You’re captured, but Grover deceives Polyphemus with a trick. You escape with the Fleece!",
+      rewards: {
+        drachmas: 20,
+        xp: 120,
+        items: [
+          {
+            id: "golden-fleece",
+            name: "Golden Fleece",
+            description: "Glows with healing energy. The only hope to save Camp Half-Blood.",
+            type: "quest-item"
+          }
+        ]
+      },
+      victoryScene: "fleece-return",
+      defeatScene: "fleece-return"
+    },
+
+    // STORY - Return with the Fleece
+    {
+      id: "fleece-return",
+      type: "story",
+      title: "Return of the Fleece",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "Thalia’s tree glowing as the Fleece is placed on it",
+          dialogue: "It’s working. The magic is restoring the tree!",
+          narration: "The air shimmers as the power of the Fleece pulses through Camp Half-Blood."
+        }
+      ],
+      nextScene: "thalia-awakens"
+    },
+
+    // STORY - Thalia Awakens
+    {
+      id: "thalia-awakens",
+      type: "story",
+      title: "Daughter of Zeus",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "A bolt of lightning striking the tree",
+          dialogue: "What just happened?!",
+          narration: "A shape steps out of the lightning. It’s a girl about your age with fierce eyes."
+        },
+        {
+          imageDescription: "Thalia standing tall under the branches",
+          dialogue: "I’m... Thalia. What year is it?",
+          narration: "Zeus’s daughter, once turned into a tree, has returned. The prophecy just changed."
+        }
+      ],
+      nextScene: "titan-curse-tease"
+    },
+
+    // CLIFFHANGER - Tease Titan's Curse
+    {
+      id: "titan-curse-tease",
+      type: "story",
+      title: "A New Prophecy",
+      questId: 2,
+      panels: [
+        {
+          imageDescription: "Oracle’s eyes glowing green",
+          dialogue: "The prophecy has shifted. Two children of the Big Three now stand.",
+          narration: "The Oracle speaks cryptically. You realize the war isn’t over—it’s just beginning."
+        },
+        {
+          imageDescription: "A dark figure in the shadows holding a scythe",
+          dialogue: "Kronos stirs...",
+          narration: "Somewhere far away, the Titan Lord opens a single glowing eye."
+        }
+      ],
+      nextScene: "end"
+    }
 ];
 
 export default scenes;

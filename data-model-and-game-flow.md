@@ -293,3 +293,39 @@ stateDiagram-v2
    - Game state can be saved to the server database (currently commented out in code)
    - Uses PostgreSQL with Drizzle ORM
    - Enables potential for cross-device play and online features
+  
+
+```mermaid
+graph TD
+  A1[lightning-thief-intro] --> A2[lightning-thief-quest-announcement]
+  A2 --> A3[oracle-riddle]
+  A3 --> B1[journey-west-decision]
+  A3 --> B1
+
+%% success and failure both go here
+
+  B1 --> C1[tunnel-riddle]
+  B1 --> C2[minotaur-battle]
+
+  C1 --> D1[underworld-entrance]
+  C1 --> C2
+
+%% failure from puzzle leads to battle
+
+  C2 --> D1
+
+%% victory
+  C2 --> E1[recovery-camp]
+  E1 --> D1
+
+  D1 --> F1[hades-confrontation]
+  F1 --> G1[betrayal-revealed]
+  F1 --> G2[helmet-discovery]
+
+  G1 --> H1[beach-battle]
+  G2 --> H1
+
+  H1 --> I1[olympus-return]
+  I1 --> J1[end]
+
+```
