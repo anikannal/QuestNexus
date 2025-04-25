@@ -121,12 +121,7 @@ export default function BattleScene() {
     
     setBattleLog(actionResult);
 
-    // Update player stats in the global state
-    updatePlayerStats({
-    health: playerHealth,
-    energy: playerEnergy,
-    });
-    
+
     // Enemy turn
     setTimeout(() => {
       performEnemyAction();
@@ -257,6 +252,42 @@ export default function BattleScene() {
                   <div className="text-sm text-stone">
                     <span className="material-icons inline-block text-accent" style={{ fontSize: "16px" }}>update</span>
                     Turn: {turnCounter}
+                  </div>
+                </div>
+                
+                {/* Player Stats */}
+                <div className="bg-white/70 rounded-lg p-3 mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-accent text-primary text-sm">Your Stats</h4>
+                    <div className="text-xs bg-primary/20 text-primary px-2 py-1 rounded">Hero</div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Health</span>
+                        <span>{playerHealth}/{gameState.player.maxHealth}</span>
+                      </div>
+                      <div className="w-full bg-stone/20 h-3 rounded-full">
+                        <div 
+                          className="bg-[#4caf50] h-full rounded-full" 
+                          style={{ width: `${(playerHealth / gameState.player.maxHealth) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Energy</span>
+                        <span>{playerEnergy}/{gameState.player.maxEnergy}</span>
+                      </div>
+                      <div className="w-full bg-stone/20 h-3 rounded-full">
+                        <div 
+                          className="bg-[#2196f3] h-full rounded-full" 
+                          style={{ width: `${(playerEnergy / gameState.player.maxEnergy) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
