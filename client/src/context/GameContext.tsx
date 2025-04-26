@@ -284,7 +284,22 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       // Determine the next scene ID based on outcome
       let nextSceneId = "";
 
-      if (currentScene.type === "story") {
+      // If player is defeated in battle, restart the current quest instead of going to the next scene
+      if (currentScene.type === "battle" && outcome === "failure") {
+        // Find the current quest to restart it
+        const currentQuestId = gameState.currentScene.questId;
+        const questsData = await import("@/data/quests");
+        const currentQuest = questsData.default.find((q: any) => q.id === currentQuestId);
+        
+        if (currentQuest) {
+          // Set the next scene to the starting scene of the current quest
+          nextSceneId = currentQuest.startingSceneId;
+          console.log("Player defeated - restarting current quest from:", nextSceneId);
+        } else {
+          // Fallback to the scene's defeatScene if quest not found
+          nextSceneId = currentScene.defeatScene || "";
+        }
+      } else if (currentScene.type === "story") {
         nextSceneId = currentScene.nextScene || "";
       } else if (currentScene.type === "puzzle") {
         nextSceneId = outcome === "success" ? currentScene.successScene || "" : currentScene.failureScene || "";
@@ -363,12 +378,15 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       setGameState(prev => {
         if (!prev) return prev;
 
+        // If we're restarting a quest due to defeat, make sure to keep the current questId
+        const questId = prev.currentScene.questId;
+        
         const updatedGameState = {
           ...prev,
           currentScene: {
             type: nextScene.type,
             id: nextSceneId,
-            questId: prev.currentScene.questId,
+            questId: questId, // Keep the current quest ID
             currentPanel: 1,
             totalPanels: nextScene.panels?.length || 1
           }
