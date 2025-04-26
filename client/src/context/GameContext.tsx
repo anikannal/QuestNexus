@@ -6,7 +6,7 @@ import quests from "@/data/quests";
 import { GameStateData, Player, QuestProgress, SceneState } from "@shared/schema";
 
 // Initial player state
-const initialPlayer: Player = {
+export const initialPlayer: Player = {
   name: "Alex",
   godParent: "Apollo",
   level: 1,
@@ -77,7 +77,7 @@ const initialGameState: GameStateData = {
 
 // Context interface
 interface GameContextProps {
-  gameState: GameStateData;
+  gameState: GameStateData; // This is non-nullable in the interface
   initializeNewGame: () => void;
   loadGame: () => void;
   saveGame: () => void;
@@ -181,8 +181,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Start a new quest
-  const startQuest = (questId: number) => {
-    console.log("Inside startQuest! QuestID:", questId);
+  const startQuest = (questId: number, sceneData?: {id: string, questId: number}) => {
+    console.log("Inside startQuest! QuestID:", questId, "Scene data:", sceneData);
     
     setGameState(prevState => {
       const currentState = prevState || initialGameState; // Fallback to initialGameState if prevState is null
@@ -195,6 +195,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         return currentState;
       }
 
+      // Use provided scene data if available, otherwise use default values
+      const sceneId = sceneData?.id || quest.startingSceneId;
+      const sceneQuestId = sceneData?.questId || questId;
+      
       const newState = {
         ...currentState,
         quests: {
@@ -207,8 +211,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         },
         currentScene: {
           type: "story",
-          id: quest.startingSceneId,
-          questId: questId,
+          id: sceneId,
+          questId: sceneQuestId,
           currentPanel: 1,
           totalPanels: 1
         }
@@ -467,51 +471,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Load game state from localStorage on initial render
-  const handleResetGame = () => {
-    console.log("Resetting the entire game");
-    initializeNewGame();
-    toast({
-      title: "Game Reset",
-      description: "The game has been reset to the beginning.",
-      variant: "default"
-    });
-  };
-
-  // Reset the current quest
-  // This function resets the current quest and player stats to their initial values
-  const handleResetQuest = () => {
-    if (!gameState || !gameState.quests.current) {
-      console.error("No current quest to reset");
-      return;
-    }
-
-    const currentQuestId = gameState.quests.current;
-    console.log("Resetting current quest:", currentQuestId);
-
-    // Reset player stats to initial values
-    updatePlayerStats({
-      health: initialPlayer.maxHealth,
-      energy: initialPlayer.maxEnergy,
-      level: initialPlayer.level,
-      xp: initialPlayer.xp
-    });
-
-    // Restart the current quest
-    startQuest(currentQuestId);
-
-    toast({
-      title: "Quest Reset",
-      description: "The current quest has been reset.",
-      variant: "default"
-    });
-  };
-
 
 
   // Context value
   const contextValue: GameContextProps = {
-    gameState: gameState || initialGameState,
+    gameState: gameState !== null ? gameState : initialGameState,
     initializeNewGame,
     loadGame,
     saveGame,

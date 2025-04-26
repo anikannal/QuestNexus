@@ -12,9 +12,11 @@ import { useGameContext } from "@/context/GameContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import quests from "@/data/quests";
+// Import initialPlayer for reset functionality
+import { initialPlayer } from "@/context/GameContext";
 
 export default function GameContainer() {
-  const { gameState, startQuest, initializeNewGame } = useGameContext();
+  const { gameState, startQuest, initializeNewGame, updatePlayerStats } = useGameContext();
   const [showInventory, setShowInventory] = useState(false);
   const { toast } = useToast();
   
@@ -29,6 +31,46 @@ export default function GameContainer() {
     });
     // Initialize a new game with fresh state
     initializeNewGame();
+  };
+
+  // Load game state from localStorage on initial render
+  const handleResetGame = () => {
+    console.log("Resetting the entire game");
+    initializeNewGame();
+    toast({
+      title: "Game Reset",
+      description: "The game has been reset to the beginning.",
+      variant: "default"
+    });
+  };
+
+  // Reset the current quest
+  // This function resets the current quest and player stats to their initial values
+  const handleResetQuest = () => {
+    if (!gameState || !gameState.quests.current) {
+      console.error("No current quest to reset");
+      return;
+    }
+
+    const currentQuestId = gameState.quests.current;
+    console.log("Resetting current quest:", currentQuestId);
+
+    // Reset player stats to initial values
+    updatePlayerStats({
+      health: initialPlayer.maxHealth,
+      energy: initialPlayer.maxEnergy,
+      level: initialPlayer.level,
+      xp: initialPlayer.xp
+    });
+
+    // Restart the current quest
+    startQuest(currentQuestId);
+
+    toast({
+      title: "Quest Reset",
+      description: "The current quest has been reset.",
+      variant: "default"
+    });
   };
   
   // Automatically start the first quest if none is selected
@@ -187,7 +229,6 @@ export default function GameContainer() {
         </div>
         
         {/* Reset game and reset quest buttons */}
-        // Inside your GameContainer component's return statement
         <div className="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
           <Button 
             onClick={handleResetGame}
