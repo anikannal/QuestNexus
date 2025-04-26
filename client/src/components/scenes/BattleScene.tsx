@@ -151,17 +151,34 @@ export default function BattleScene() {
   
   const handleContinueAfterBattle = () => {
     // Update player stats based on battle outcome
-    updatePlayerStats({
-      health: playerHealth,
-      energy: playerEnergy,
-      drachmas: gameState.player.drachmas + (battleResult === "victory" ? scene.rewards.drachmas : 0),
-      xp: gameState.player.xp + (battleResult === "victory" ? scene.rewards.xp : 0)
-    });
-    
-    // If victory, add any item rewards to inventory
-    if (battleResult === "victory" && scene.rewards.items) {
-      // Would be implemented in the context
-      // addItemsToInventory(scene.rewards.items);
+    if (battleResult === "victory") {
+      // Only update stats on victory
+      updatePlayerStats({
+        health: playerHealth,
+        energy: playerEnergy,
+        drachmas: gameState.player.drachmas + scene.rewards.drachmas,
+        xp: gameState.player.xp + scene.rewards.xp
+      });
+      
+      // If victory, add any item rewards to inventory
+      if (scene.rewards.items) {
+        // Would be implemented in the context
+        // addItemsToInventory(scene.rewards.items);
+      }
+    } else {
+      // On defeat, reset player health and energy to default values
+      // This ensures the player starts with full health when restarting the quest
+      updatePlayerStats({
+        health: gameState.player.maxHealth,
+        energy: gameState.player.maxEnergy
+      });
+      
+      // Show a toast message to inform the player they're restarting the quest
+      toast({
+        title: "Quest Failed",
+        description: "You will restart from the beginning of this quest.",
+        variant: "destructive"
+      });
     }
     
     // Complete the scene with the appropriate outcome
