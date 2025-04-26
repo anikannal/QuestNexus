@@ -48,6 +48,7 @@ export default function StoryScene() {
   const currentPanelData = scene.panels[currentPanel - 1];
   
   return (
+    <>
     <div id="storyScene" className="bg-white/90 rounded-lg shadow-lg p-6 max-w-4xl mx-auto mb-6">
       <div className="border-b border-stone/20 pb-2 mb-4 flex justify-between items-center">
         <h2 className="font-heading text-xl text-primary">{scene.title}</h2>
@@ -56,15 +57,14 @@ export default function StoryScene() {
       
       <div className="story-panels">
         <div className="panel mb-8 bg-parchment rounded-lg overflow-hidden shadow">
-          <div className="h-64 bg-stone/10 flex items-center justify-center">
+          <div className="h-96 w-full flex items-center justify-center bg-stone-100">
             <img
-              src={`attached_assets/${currentPanelData.imageName}.png`}
+              src={`/${currentPanelData.imageName}.png`}
               alt={currentPanelData.imageName}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
     </div>
             <div className="text-center text-stone/60">
-              <span className="material-icons text-5xl">image</span>
               <p>{currentPanelData.imageDescription}</p>
             </div>
           </div>
@@ -95,6 +95,7 @@ export default function StoryScene() {
           <span className="material-icons ml-1">arrow_forward</span>
         </Button>
       </div>
-    </div>
+    </> 
+    
   );
 }
