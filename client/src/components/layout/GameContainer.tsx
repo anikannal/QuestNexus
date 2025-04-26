@@ -186,14 +186,22 @@ export default function GameContainer() {
           {renderCurrentScene()}
         </div>
         
-        {/* Emergency reset button during development */}
-        <div className="fixed bottom-16 right-4 z-50">
+        {/* Reset game and reset quest buttons */}
+        // Inside your GameContainer component's return statement
+        <div className="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
           <Button 
-            onClick={handleHardReset}
+            onClick={handleResetGame}
             size="sm"
-            className="bg-red-600 hover:bg-red-700 text-xs"
+            className="bg-blue-600 hover:bg-blue-700 text-xs"
           >
-            Reset Game (Dev)
+            Reset Game
+          </Button>
+          <Button 
+            onClick={handleResetQuest}
+            size="sm"
+            className="bg-green-600 hover:bg-green-700 text-xs"
+          >
+            Reset Quest
           </Button>
         </div>
       </main>
