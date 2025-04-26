@@ -63,7 +63,7 @@ export default function StoryScene() {
               alt={currentPanelData.imageName}
               className="w-full h-full object-contain"
             />
-    </div>
+          </div>
             <div className="text-center text-stone/60">
               <p>{currentPanelData.imageDescription}</p>
             </div>

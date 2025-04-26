@@ -182,6 +182,7 @@ const scenes = [
     title: "Confronting the Lord of the Dead",
     questId: 1,
     imageDescription: "Hades on his throne of bones, surrounded by darkness and blue flames",
+    imageName: "hades_throne",
     dialogue: "So, the children of the Olympians come to accuse me of theft? Why would I want war? I have enough subjects already.",
     narration: "Hades' voice echoes throughout the cavernous throne room, causing small rocks to crumble from the ceiling.",
     followupDialogue: "But since you're here, perhaps we can make a deal. Your mother's soul for information about the bolt.",
@@ -213,11 +214,13 @@ const scenes = [
     panels: [
       {
         imageDescription: "The infirmary at Camp Half-Blood with the player resting in bed",
+        imageName: "camp_infirmary",
         dialogue: "You were lucky to escape with your lives. The Minotaur is one of the most dangerous creatures in Greek mythology.",
         narration: "Chiron tends to your wounds while explaining that you'll need to rest before trying again."
       },
       {
         imageDescription: "Annabeth showing a map with an alternative route",
+        imageName: "annabeth_map",
         dialogue: "I've been studying the maps. There's another way we can try to reach the Underworld, but we'll need to move quickly.",
         narration: "The deadline of the summer solstice is drawing closer. You don't have much time left."
       }
@@ -234,11 +237,13 @@ const scenes = [
     panels: [
       {
         imageDescription: "Hades looking surprised as he searches his throne area",
+        imageName: "hades_surprised",
         dialogue: "My helm of darkness! It's gone! I've been robbed as well!",
         narration: "Hades' face contorts with rage as blue flames erupt around him."
       },
       {
         imageDescription: "The player and friends backing away from the angry god",
+        imageName: "friends_backing_away",
         dialogue: "Someone has stolen from both Zeus and me. Find my helm along with the bolt, and I will release your mother.",
         narration: "You realize there's a bigger conspiracy at work than you initially thought."
       }
@@ -254,16 +259,19 @@ const scenes = [
     panels: [
       {
         imageDescription: "Luke standing on a beach with a lightning bolt in hand",
+        imageName: "luke_betrayal",
         dialogue: "I see you've made it out of the Underworld. Impressive for a novice.",
         narration: "Luke, son of Hermes, stands before you with a familiar gleam in his hand - Zeus's lightning bolt."
       },
       {
         imageDescription: "Close-up of Luke's face with a scar and bitter expression",
+        imageName: "luke_closeup",
         dialogue: "The gods have ruled for too long. It's time for a new age. Kronos is rising, and I serve him now.",
         narration: "You suddenly understand that Luke was the thief all along, working to start a war between the gods."
       },
       {
         imageDescription: "Luke summoning monsters from the ground",
+        imageName: "luke_summoning",
         dialogue: "I can't let you return that bolt to Olympus. Sorry, old friend.",
         narration: "Luke raises his hand, and the ground begins to shake as monsters emerge."
       }
@@ -277,6 +285,7 @@ const scenes = [
     title: "Battle at the Beach",
     questId: 1,
     imageDescription: "Luke standing with his sword Backbiter drawn, ready to fight",
+    imageName: "luke_ready",
     introText: "Luke summons scorpion-like monsters to attack you while he escapes. You must defeat them to recover the bolt!",
     enemy: {
       name: "Pit Scorpion",
@@ -287,8 +296,10 @@ const scenes = [
       description: "A deadly creature from the depths of Tartarus. Its sting contains venom that can kill even a demigod."
     },
     victoryImageDescription: "The player holding the recovered lightning bolt triumphantly",
+    victoryImageName: "victory_lightning_bolt",
     victoryText: "You've defeated the monsters! Luke has fled, but dropped the lightning bolt in his haste. The quest is nearly complete - you must return to Olympus!",
     defeatImageDescription: "The player collapsed on the sand as the scorpion looms over them",
+    defeatImageName: "defeat_scorpion",
     defeatText: "The venom courses through your veins, but Annabeth manages to use some emergency nectar to save you. Luke has escaped with the bolt.",
     rewards: {
       drachmas: 10,
@@ -314,21 +325,25 @@ const scenes = [
     panels: [
       {
         imageDescription: "The player ascending to Mount Olympus through magical elevator",
+        imageName: "olympus_elevator",
         dialogue: "It's the summer solstice. We've made it just in time.",
         narration: "The magical elevator in the Empire State Building rises to the 600th floor, taking you to Mount Olympus."
       },
       {
         imageDescription: "The grand throne room of the gods with Zeus sitting on his central throne",
+        imageName: "zeus_throne",
         dialogue: "So, young demigod, you claim my brother's son is innocent of the theft?",
         narration: "Zeus's voice booms throughout the hall as all the Olympian gods watch you intently."
       },
       {
         imageDescription: "The player kneeling before Zeus and presenting the lightning bolt",
+        imageName: "player_kneeling",
         dialogue: "It was Luke, son of Hermes, who stole both your bolt and Hades' helm. He serves Kronos now.",
         narration: "A murmur runs through the gods as you mention the name of the fallen Titan lord."
       },
       {
         imageDescription: "Zeus raising the bolt, causing thunder to boom across the sky",
+        imageName: "zeus_lightning",
         dialogue: "You have done Olympus a great service. For now, at least, war is averted.",
         narration: "Zeus accepts the bolt, and electricity courses through the air as he reclaims his symbol of power."
       }

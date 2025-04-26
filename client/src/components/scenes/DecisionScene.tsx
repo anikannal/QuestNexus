@@ -35,9 +35,15 @@ export default function DecisionScene() {
       </div>
       
       <div className="panel bg-parchment rounded-lg overflow-hidden shadow">
-        <div className="h-64 bg-stone/10 flex items-center justify-center">
+        <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+          <img
+            src={`/${scene.imageName}.png`}
+            alt={scene.imageName}
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <div className="bg-stone/10 flex items-center justify-center">
           <div className="text-center text-stone/60">
-            <span className="material-icons text-5xl">alt_route</span>
             <p>{scene.imageDescription}</p>
           </div>
         </div>

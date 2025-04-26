@@ -190,9 +190,15 @@ export default function BattleScene() {
       case 1: // Introduction
         return (
           <div id="battlePanel1" className="panel bg-parchment rounded-lg overflow-hidden shadow mb-6">
-            <div className="h-80 bg-stone/10 flex items-center justify-center">
+            <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+              <img
+                src={`/${scene.imageName}.png`}
+                alt={scene.imageName}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="bg-stone/10 flex items-center justify-center">
               <div className="text-center text-stone/60">
-                <span className="material-icons text-5xl">sports_kabaddi</span>
                 <p>{scene.imageDescription}</p>
               </div>
             </div>
@@ -221,10 +227,15 @@ export default function BattleScene() {
                   <h3 className="font-heading text-xl text-[#f44336]">{scene.enemy.name}</h3>
                   <div className="px-3 py-1 bg-[#f44336]/20 text-[#f44336] text-sm rounded-full">Level {scene.enemy.level}</div>
                 </div>
-                
-                <div className="h-48 bg-stone/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="h-48 w-full flex items-center justify-center bg-stone-100">
+                  <img
+                    src={`/${scene.imageName}.png`}
+                    alt={scene.imageName}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="bg-stone/20 rounded-lg flex items-center justify-center mb-4">
                   <div className="text-center text-stone/60">
-                    <span className="material-icons text-5xl">{scene.enemy.icon || "pets"}</span>
                     <p>{scene.enemy.displayName || scene.enemy.name} battle stance</p>
                   </div>
                 </div>
@@ -423,9 +434,15 @@ export default function BattleScene() {
       case 3: // Outcome
         return (
           <div id="battlePanel3" className="panel bg-parchment rounded-lg overflow-hidden shadow mt-6">
-            <div className="h-64 bg-stone/10 flex items-center justify-center">
+            <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+              <img
+                src={battleResult === "victory" ? `/${scene.victoryImageName}.png` : `/${scene.defeatImageName}.png`}
+                alt={scene.imageName}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="bg-stone/10 flex items-center justify-center">
               <div className="text-center text-stone/60">
-                <span className="material-icons text-5xl">{battleResult === "victory" ? "emoji_events" : "sentiment_very_dissatisfied"}</span>
                 <p>{battleResult === "victory" ? scene.victoryImageDescription : scene.defeatImageDescription}</p>
               </div>
             </div>
