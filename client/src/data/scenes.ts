@@ -8,11 +8,13 @@ const scenes = [
     panels: [
       {
         imageDescription: "Camp Half-Blood entrance with Chiron greeting new campers",
+        imageName: "camp_half_blood_entrance",
         dialogue: "Welcome to Camp Half-Blood, a safe haven for demigods like yourself. I am Chiron, activities director here at camp.",
         narration: "Chiron, a centaur with a kind face, approaches you as you cross the camp boundary."
       },
       {
         imageDescription: "Thunder crackling in the sky above Camp Half-Blood",
+        imageName: "thunderstorm",
         dialogue: "I'm afraid you've arrived at a troubled time. Zeus's master lightning bolt has been stolen, and he blames Poseidon's offspring. War among the gods is brewing.",
         narration: "Thunder rumbles ominously in the distance, despite the clear sky."
       }
@@ -27,16 +29,19 @@ const scenes = [
     panels: [
       {
         imageDescription: "Campers gathered around campfire, with Chiron standing before them",
+        imageName: "campfire_gathering",
         dialogue: "Young heroes, we need a brave volunteer to undertake a quest to find the lightning bolt and return it to Zeus before the summer solstice.",
         narration: "The flames of the campfire seem to grow higher as Chiron speaks, casting long shadows across the faces of the gathered demigods."
       },
       {
         imageDescription: "Close up of the player character looking determined",
+        imageName: "player_determined",
         dialogue: "I'll accept this quest. The peace between the gods must be preserved.",
         narration: "Your fellow campers look at you with a mixture of relief and concern. This is a dangerous mission, but someone has to do it."
       },
       {
         imageDescription: "Chiron smiling with pride at the player",
+        imageName: "chiron_proud",
         dialogue: "Very well. You should consult the Oracle before you leave. She resides in the attic of the Big House.",
         narration: "Chiron places a hand on your shoulder, his eyes conveying both pride and worry."
       }
@@ -51,6 +56,7 @@ const scenes = [
     title: "The Oracle's Riddle",
     questId: 1,
     imageDescription: "The Oracle of Delphi shrouded in mysterious green mist",
+    imageName: "oracle_delphi",
     riddle: "I am the son of sea and shore, \nYet never wet behind my door. \nI hold the strength of ocean's roar, \nYet stay on land forevermore. \nWhat am I?",
     hint: "Think about what creatures might be connected to Poseidon but live on land.",
     correctAnswer: "cyclops",
@@ -67,6 +73,7 @@ const scenes = [
     title: "A Fateful Decision",
     questId: 1,
     imageDescription: "A crossroads with Annabeth pointing to different paths",
+    imageName: "crossroads",
     dialogue: "We need to find the entrance to the Underworld. There are two possible routes from here.",
     narration: "She points to a dark tunnel on your left and a dangerous mountain path on your right.",
     followupDialogue: "Which way should we go? We don't have time to try both.",
@@ -96,6 +103,7 @@ const scenes = [
     title: "The Guardian's Test",
     questId: 1,
     imageDescription: "A stone door with ancient Greek inscriptions glowing faintly",
+    imageName: "stone_door",
     riddle: "To pass this gate of ancient stone,\nThree words you seek, but speak as one.\nFirst, what falls but never breaks?\nSecond, what breaks but never falls?\nThird, what's always old but newly born each day?",
     hint: "Think of things in nature that follow these patterns.",
     correctAnswer: "night day dawn",
@@ -112,6 +120,7 @@ const scenes = [
     title: "Battle with the Minotaur",
     questId: 1,
     imageDescription: "The Minotaur appears, blocking your path in a dark labyrinth",
+    imageName: "minotaur_appearance",
     introText: "The ground shakes as the Minotaur emerges from the shadows. Its massive form blocks your path, and there's no way around it. You must fight!",
     enemy: {
       name: "Minotaur",
@@ -122,8 +131,10 @@ const scenes = [
       description: "A fearsome creature with the head of a bull and the body of a man. It's incredibly strong but not very agile."
     },
     victoryImageDescription: "Victory scene with defeated Minotaur",
+    victoryImageName: "minotaur_victory",
     victoryText: "You've defeated the Minotaur! As it crumbles to dust, you notice something gleaming on the ground.",
     defeatImageDescription: "The player being knocked down by the Minotaur",
+    defeatImageName: "minotaur_defeat",
     defeatText: "The Minotaur overpowers you, but Annabeth creates a diversion allowing you to escape. You've lost valuable time and resources.",
     rewards: {
       drachmas: 5,
@@ -150,11 +161,13 @@ const scenes = [
     panels: [
       {
         imageDescription: "A dark cavern entrance with ghostly wisps of fog flowing outward",
+        imageName: "underworld_entrance",
         dialogue: "This is it - the entrance to the Underworld. Hades will know who took the lightning bolt.",
         narration: "The air feels unnaturally cold, and a sense of dread washes over you as you approach the entrance."
       },
       {
         imageDescription: "Charon the ferryman waiting by the River Styx",
+        imageName: "charon_ferryman",
         dialogue: "The living do not cross these waters without payment. Each soul must pay one coin to the ferryman.",
         narration: "Charon eyes your group expectantly, his skeletal hand outstretched."
       }
