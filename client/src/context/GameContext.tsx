@@ -467,6 +467,48 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  // Load game state from localStorage on initial render
+  const handleResetGame = () => {
+    console.log("Resetting the entire game");
+    initializeNewGame();
+    toast({
+      title: "Game Reset",
+      description: "The game has been reset to the beginning.",
+      variant: "default"
+    });
+  };
+
+  // Reset the current quest
+  // This function resets the current quest and player stats to their initial values
+  const handleResetQuest = () => {
+    if (!gameState || !gameState.quests.current) {
+      console.error("No current quest to reset");
+      return;
+    }
+
+    const currentQuestId = gameState.quests.current;
+    console.log("Resetting current quest:", currentQuestId);
+
+    // Reset player stats to initial values
+    updatePlayerStats({
+      health: initialPlayer.maxHealth,
+      energy: initialPlayer.maxEnergy,
+      level: initialPlayer.level,
+      xp: initialPlayer.xp
+    });
+
+    // Restart the current quest
+    startQuest(currentQuestId);
+
+    toast({
+      title: "Quest Reset",
+      description: "The current quest has been reset.",
+      variant: "default"
+    });
+  };
+
+
+
   // Context value
   const contextValue: GameContextProps = {
     gameState: gameState || initialGameState,
