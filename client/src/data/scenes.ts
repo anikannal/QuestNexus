@@ -314,7 +314,7 @@ const scenes = [
       ]
     },
     victoryScene: "olympus-return",
-    defeatScene: "olympus-return"
+    defeatScene: ""
   },
   
   {

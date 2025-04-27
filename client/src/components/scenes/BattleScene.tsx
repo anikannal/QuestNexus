@@ -166,18 +166,12 @@ export default function BattleScene() {
         // addItemsToInventory(scene.rewards.items);
       }
     } else {
-      // On defeat, reset player health and energy to default values
-      // This ensures the player starts with full health when restarting the quest
-      updatePlayerStats({
-        health: gameState.player.maxHealth,
-        energy: gameState.player.maxEnergy
-      });
       
       // Show a toast message to inform the player they're restarting the quest
       toast({
         title: "Quest Failed",
-        description: "You will restart from the beginning of this quest.",
-        variant: "destructive"
+        description: "You will have to regroup and retry!",
+        //variant: "destructive"
       });
     }
     
@@ -467,7 +461,7 @@ export default function BattleScene() {
               
               <Button
                 id="continueBattleBtn"
-                className={`px-6 py-2 ${battleResult === "victory" ? "bg-secondary" : "bg-stone"} text-white rounded-lg hover:${battleResult === "victory" ? "bg-secondary-light" : "bg-stone/80"}`}
+                className={`px-6 py-2 ${battleResult === "victory" || scene.defeatScene != "" ? "bg-secondary" : "bg-stone"} text-white rounded-lg hover:${battleResult === "victory" ? "bg-secondary-light" : "bg-stone/80"}`}
                 onClick={handleContinueAfterBattle}
               >
                 Continue Quest

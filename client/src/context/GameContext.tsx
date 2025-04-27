@@ -289,7 +289,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       let nextSceneId = "";
 
       // If player is defeated in battle, restart the current quest instead of going to the next scene
-      if (currentScene.type === "battle" && outcome === "failure") {
+      /*if (currentScene.type === "battle" && outcome === "failure") {
         // Find the current quest to restart it
         const currentQuestId = gameState.currentScene.questId;
         const questsData = await import("@/data/quests");
@@ -303,12 +303,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           // Fallback to the scene's defeatScene if quest not found
           nextSceneId = currentScene.defeatScene || "";
         }
-      } else if (currentScene.type === "story") {
+      } else*/ 
+      if (currentScene.type === "story") {
         nextSceneId = currentScene.nextScene || "";
       } else if (currentScene.type === "puzzle") {
         nextSceneId = outcome === "success" ? currentScene.successScene || "" : currentScene.failureScene || "";
       } else if (currentScene.type === "battle") {
-        nextSceneId = outcome === "success" ? currentScene.victoryScene || "" : currentScene.defeatScene || "";
+        nextSceneId = (outcome === "success") ? currentScene.victoryScene || "" : currentScene.defeatScene || "";
       } else if (currentScene.type === "decision") {
         const selectedChoice = currentScene.choices.find((c: any) => c.id === outcome);
         nextSceneId = selectedChoice?.nextScene || currentScene.defaultNextScene || "";
