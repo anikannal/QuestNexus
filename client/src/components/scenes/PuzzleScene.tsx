@@ -73,18 +73,14 @@ export default function PuzzleScene() {
       </div>
       
       <div className="panel bg-parchment rounded-lg overflow-hidden shadow">
-        <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+        <div className="h-96 w-full flex items-center justify-center bg-parchment">
           <img
             src={`/${scene.imageName}.png`}
             alt={scene.imageName}
             className="w-full h-full object-contain"
           />
         </div>
-        <div className="bg-stone/10 flex items-center justify-center">
-          <div className="text-center text-stone/60">
-            <p>{scene.imageDescription}</p>
-          </div>
-        </div>
+        
         <div className="p-6">
           <p className="font-accent text-lg mb-4 text-center italic">{scene.riddle}</p>
           

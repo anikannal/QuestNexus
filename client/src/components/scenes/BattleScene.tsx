@@ -190,18 +190,14 @@ export default function BattleScene() {
       case 1: // Introduction
         return (
           <div id="battlePanel1" className="panel bg-parchment rounded-lg overflow-hidden shadow mb-6">
-            <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+            <div className="h-96 w-full flex items-center justify-center bg-parchment">
               <img
                 src={`/${scene.imageName}.png`}
                 alt={scene.imageName}
                 className="w-full h-full object-contain"
               />
             </div>
-            <div className="bg-stone/10 flex items-center justify-center">
-              <div className="text-center text-stone/60">
-                <p>{scene.imageDescription}</p>
-              </div>
-            </div>
+            
             <div className="p-4">
               <p className="mb-3 font-accent text-lg">{scene.introText}</p>
               <div className="text-center mt-4">
@@ -434,18 +430,14 @@ export default function BattleScene() {
       case 3: // Outcome
         return (
           <div id="battlePanel3" className="panel bg-parchment rounded-lg overflow-hidden shadow mt-6">
-            <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+            <div className="h-96 w-full flex items-center justify-center bg-parchment">
               <img
                 src={battleResult === "victory" ? `/${scene.victoryImageName}.png` : `/${scene.defeatImageName}.png`}
                 alt={scene.imageName}
                 className="w-full h-full object-contain"
               />
             </div>
-            <div className="bg-stone/10 flex items-center justify-center">
-              <div className="text-center text-stone/60">
-                <p>{battleResult === "victory" ? scene.victoryImageDescription : scene.defeatImageDescription}</p>
-              </div>
-            </div>
+            
             <div className="p-4 text-center">
               <h3 className={`font-heading text-xl ${battleResult === "victory" ? "text-[#4caf50]" : "text-[#f44336]"} mb-3`}>
                 {battleResult === "victory" ? "Victory!" : "Defeat!"}

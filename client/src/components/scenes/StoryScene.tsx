@@ -57,16 +57,14 @@ export default function StoryScene() {
       
       <div className="story-panels">
         <div className="panel mb-8 bg-parchment rounded-lg overflow-hidden shadow">
-          <div className="h-96 w-full flex items-center justify-center bg-stone-100">
+          <div className="h-96 w-full flex items-center justify-center bg-parchment">
             <img
               src={`/${currentPanelData.imageName}.png`}
               alt={currentPanelData.imageName}
               className="w-full h-full object-contain"
             />
           </div>
-            <div className="text-center text-stone/60">
-              <p>{currentPanelData.imageDescription}</p>
-            </div>
+            
           </div>
           <div className="p-4">
             <p className="mb-3 font-accent text-lg">{currentPanelData.dialogue}</p>
