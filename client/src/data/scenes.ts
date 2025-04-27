@@ -36,15 +36,27 @@ const scenes = [
       {
         imageDescription: "Close up of the player character looking determined",
         imageName: "player_determined",
-        dialogue: "I'll accept this quest. The peace between the gods must be preserved.",
+        dialogue: "I'll accept this quest. The peace between the gods must be preserved. Maybe I'll also find my mother along the way!",
         narration: "Your fellow campers look at you with a mixture of relief and concern. This is a dangerous mission, but someone has to do it."
+      },
+      {
+        imageDescription: "Grover, Percy and Annabeth will also join the quest",
+        imageName: "adventure_together",
+        dialogue: "We will come with you! Together, we shall find the lightning bolt.",
+        narration: "You are relieved to have Grover, Percy and Annabeth by your side. Going alone would be too dangerous."
       },
       {
         imageDescription: "Chiron smiling with pride at the player",
         imageName: "chiron_proud",
         dialogue: "Very well. You should consult the Oracle before you leave. She resides in the attic of the Big House.",
         narration: "Chiron places a hand on your shoulder, his eyes conveying both pride and worry."
-      }
+      },
+      {
+        imageDescription: "Alex and friends starting off on the quest",
+        imageName: "four_friends",
+        dialogue: "",
+        narration: "Alex, Annabeth, Grover, and Percy are ready to embark on their quest. They stand under Thalia's tree, ready for whatever adventures await them."
+      },
     ],
     nextScene: "oracle-riddle"
   },
@@ -57,14 +69,16 @@ const scenes = [
     questId: 1,
     imageDescription: "The Oracle of Delphi shrouded in mysterious green mist",
     imageName: "oracle_delphi",
-    riddle: "I am the son of sea and shore, \nYet never wet behind my door. \nI hold the strength of ocean's roar, \nYet stay on land forevermore. \nWhat am I?",
-    hint: "Think about what creatures might be connected to Poseidon but live on land.",
-    correctAnswer: "cyclops",
-    successMessage: "The Oracle nods approvingly. 'Seek the Cyclops in the west. He knows of the bolt's theft.'",
+    riddle: "I rule a realm where no sun shines, \nWhere rivers whisper ancient lines. \nThe living fear my shadowed call — \nYet in my kingdom, all must fall.\nWho am I?",
+    hint: "My crown is unseen, my throne is below. I am the god of fear and sorrow.",
+    correctAnswer: "hades",
+    successMessage: "The Oracle nods approvingly. 'Seek Hades and you shall find the thunderbolt.'",
     failureMessage: "The Oracle frowns. 'Perhaps another path would serve you better...'",
     successScene: "journey-west-decision",
     failureScene: "journey-west-decision"
   },
+
+  
   
   // DECISION SCENE
   {
@@ -90,12 +104,40 @@ const scenes = [
         title: "Climb the Mountain Path",
         description: "It's exposed and dangerous, but Annabeth thinks she remembers this route from old legends. It might lead to a back entrance.",
         hint: "This path likely involves combat with creatures guarding the way.",
-        nextScene: "minotaur-battle"
+        nextScene: "moutain-path"
       }
     ],
     defaultNextScene: "tunnel-riddle"
   },
-  
+
+  // STORY SCENE
+  {
+    id: "mountain-path",
+    type: "story",
+    title: "The Mountain Path",
+    questId: 1,
+    panels: [
+      {
+        imageDescription: "Alex and friends walking up a treacherous mountain path",
+        imageName: "treacherous_path",
+        dialogue: "",
+        narration: "As you climb the mountain, the path becomes increasingly steep and treacherous. The air grows thin, and the temperature drops."
+      },
+      {
+        imageDescription: "There is no other way but to enter a dark labyrinth",
+        imageName: "dark_labyrinth",
+        dialogue: "We have to go through here! We dont have time to trace back and find an alternate path.",
+        narration: "You realize that there is no other way but to enter the dark labyrinth. You carefully make your way through the dark tunnels."
+      },
+      {
+        imageDescription: "Alex and friends finding their way through a dark tunnel",
+        imageName: "dark_tunnel",
+        dialogue: "Do you hear that!? What are we heading into?",
+        narration: "A low but ominous growling sound echoes through the tunnel. You can feel the tension in the air."
+      },
+    ],
+    nextScene: "minotaur-battle"
+  },
   // ANOTHER PUZZLE
   {
     id: "tunnel-riddle",
@@ -190,14 +232,14 @@ const scenes = [
       {
         id: "accept-deal",
         title: "Accept Hades' Deal",
-        description: "Give up your quest in exchange for your mother's freedom. Hades claims he knows who the real thief is.",
-        hint: "This path prioritizes family over the greater mission.",
+        description: "Know who stole the thunderbolt in exchange for your mother's freedom. Hades claims he knows who the real thief is.",
+        hint: "This path prioritizes the greater mission over family.",
         nextScene: "betrayal-revealed"
       },
       {
         id: "refuse-deal",
         title: "Refuse the Deal",
-        description: "Your quest is too important. War between the gods would cause countless deaths. There must be another way.",
+        description: "Family is important. But, war between the gods would cause countless deaths. There must be another way.",
         hint: "Standing firm might reveal more about the situation.",
         nextScene: "helmet-discovery"
       }
@@ -246,11 +288,93 @@ const scenes = [
         imageName: "friends_backing_away",
         dialogue: "Someone has stolen from both Zeus and me. Find my helm along with the bolt, and I will release your mother.",
         narration: "You realize there's a bigger conspiracy at work than you initially thought."
+      },
+      {
+        imageDescription: "Alex and friends are out of the underworld",
+        imageName: "out_of_the_underworld",
+        dialogue: "We have to figure out who's stolen the thunderbolt. It's best if we consult the god of theivery, Hermes. They say he spends most of his time in the cursed Lotus Casino.",
+        narration: "You barely manage to survive your encounter with Hades. Though you escaped the underworld you still dont know who stole the lightening bolt!"
+      },
+      {
+        imageDescription: "Alex and friends arrive at the Lotus Casino",
+        imageName: "lotus_casino",
+        dialogue: "Hermes has to be somewhere here. I've heard he likes to play poker with mortals.",
+        narration: "The Lotus Casino is bustling with activity. You can hear the clinking of coins and the laughter of gamblers."
+      },
+      {
+        imageDescription: "Hermes is found playing poker",
+        imageName: "hermes_poker",
+        dialogue: "Welcome demigods! Any of you played poker before?",
+        narration: "You realize Hermes is going to be a hard nut to crack but you dont have any other options."
       }
     ],
-    nextScene: "beach-battle"
+    nextScene: "hermes-deal"
+  },
+  // PUZZLE SCENE
+  {
+    id: "hermes-deal",
+    type: "puzzle",
+    title: "The Guardian's Test",
+    questId: 1,
+    imageDescription: "Hermes riddles the four friends",
+    imageName: "hermes-closeup",
+    riddle: "I move without legs,\nI steal without hands,\nI whisper through walls,\nYet no door can withstand. \nWhat am I?",
+    hint: "You can't catch me, but you can hear me.",
+    correctAnswer: "wind",
+    successMessage: "Hermes sighs and gives a slight chuckle,\"You got that right!\" he says.",
+    failureMessage: "Hermes looks at you with a mischeavious grin. \"Too bad, you got that wrong! How about I give you another deal?\"",
+    successScene: "hermes-reveals-thief",
+    failureScene: "hermes-asks-for-horn"
+  },
+
+  // STORY SCENE
+  {
+    id: "hermes-reveals-thief",
+    type: "story",
+    title: "The True Thief",
+    questId: 1,
+    panels: [
+      {
+        imageDescription: "Hermes reveals the thief",
+        imageName: "hermes_reveals_thief",
+        dialogue: "Ah! Though I dont want to, I will have to tell you. \nIt was my son, Luke. You can find him on the Montauk beach if you hurry.",
+        narration: "Hermes looks worried as he speaks. He knows that revealing this information means trouble for Luke."
+      }
+    ],
+    nextScene: "betrayal-revealed"
+  },
+
+  // DECISION SCENE
+  {
+    id: "hermes-asks-for-horn",
+    type: "decision",
+    title: "Hermes asks for the Minotaur horn.",
+    questId: 1,
+    imageDescription: "Hermes throws a curve-ball, he ask for the Minotaur horn!",
+    imageName: "hermes_horn",
+    dialogue: "I will give you one more chance, bring me a Minotaur horn and I'll tell you who stole the thunderbolt.",
+    narration: "Hermes drives a hard bargain. No horn, no answer!",
+    followupDialogue: "If you dont have it, go get it!",
+    choices: [
+      {
+        id: "accept-deal",
+        title: "I have the Minotaur horn!",
+        description: "Know who stole the thunderbolt in exchange for Minotaur's horn.",
+        hint: "You would have collected it after your battle with the Minotaur.",
+        nextScene: "hermes-reveals-thief"
+      },
+      {
+        id: "refuse-deal",
+        title: "I do not have the Minotaur horn.",
+        description: "Aah! Right when you thought he will tell you.",
+        hint: "You dont have it! Fight the Minotaur, get the horn.",
+        nextScene: "minotaur-battle"
+      }
+    ],
+    defaultNextScene: "betrayal-revealed"
   },
   
+  // STORY SCENE
   {
     id: "betrayal-revealed",
     type: "story",
@@ -284,8 +408,8 @@ const scenes = [
     type: "battle",
     title: "Battle at the Beach",
     questId: 1,
-    imageDescription: "Luke standing with his sword Backbiter drawn, ready to fight",
-    imageName: "luke_ready",
+    imageDescription: "Monsters flooding the beach",
+    imageName: "beach_battle_start",
     introText: "Luke summons scorpion-like monsters to attack you while he escapes. You must defeat them to recover the bolt!",
     enemy: {
       name: "Pit Scorpion",
