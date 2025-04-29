@@ -82,21 +82,26 @@ export default function QuestOverview() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 bg-amber-50 relative">
-      {/* Background texture - faded old map */}
+      {/* Background texture - faded old map with subtle pattern */}
       <div 
-        className="absolute inset-0 z-0 opacity-15 bg-repeat" 
-        style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23964B00' fill-opacity='0.25' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-          backgroundSize: '300px 300px',
+        className="absolute inset-0 z-0 bg-amber-50"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle, transparent 20%, rgba(246, 224, 194, 0.6) 20%, rgba(246, 224, 194, 0.6) 80%, transparent 80%, transparent),
+            radial-gradient(circle, transparent 20%, rgba(246, 224, 194, 0.6) 20%, rgba(246, 224, 194, 0.6) 80%, transparent 80%, transparent)
+          `,
+          backgroundPosition: `0 0, 50px 50px`,
+          backgroundSize: `100px 100px`,
+          opacity: 0.3
         }}
       ></div>
       
-      {/* Semi-transparent cracks overlay */}
+      {/* Subtle paper texture overlay */}
       <div 
-        className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
+        className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
         style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l50 50-50 50M100 0L50 50l50 50' stroke='%23000000' stroke-width='1' fill='none' stroke-opacity='0.3'/%3E%3C/svg%3E")`,
-          backgroundSize: '50px 50px',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px',
         }}
       ></div>
       
@@ -107,32 +112,33 @@ export default function QuestOverview() {
 
       {/* Journey path with quest stops */}
       <div className="w-full max-w-4xl z-10 relative mx-auto">
-        {/* The zigzag path */}
-        <div className="absolute left-1/2 top-8 bottom-8 w-1 bg-amber-800/50 transform -translate-x-1/2 z-0 hidden md:block"></div>
-        {/* Dotted paths between points in mobile view */}
-        <div className="md:hidden absolute left-8 top-0 bottom-0 w-1 border-l-2 border-dashed border-amber-800/50 z-0"></div>
+        {/* The zigzag path - slightly away from cards */}
+        <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-amber-800/30 transform -translate-x-1/2 z-0 hidden md:block"></div>
         
-        <div className="space-y-12 relative">
+        {/* Dotted path for mobile view - moved further left */}
+        <div className="md:hidden absolute left-4 top-0 bottom-0 w-0.5 border-l border-dashed border-amber-800/30 z-0"></div>
+        
+        <div className="space-y-28 relative"> {/* Increased vertical spacing between quests */}
           {quests.map((quest, index) => {
             const buttonProps = getQuestButtonProps(quest.id);
             const questState = gameState.quests.available.find(q => q.id === quest.id);
             const isEven = index % 2 === 0;
             
-            // Different positions for desktop zigzag effect
+            // Different positions for desktop zigzag effect - added more spacing from central line
             const positionClasses = isEven 
-              ? "md:ml-auto md:mr-8 md:text-right" 
-              : "md:mr-auto md:ml-8 md:text-left";
+              ? "md:ml-auto md:mr-12 md:text-right" 
+              : "md:mr-auto md:ml-12 md:text-left";
             
             return (
               <div 
                 key={quest.id} 
-                className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-2rem)] transition-all duration-300`}
+                className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-4rem)] transition-all duration-300`}
               >
-                {/* Circle marker on the path */}
-                <div className="hidden md:block absolute top-8 left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full bg-amber-800 z-20"></div>
+                {/* Circle marker on the path - made smaller and more subtle */}
+                <div className="hidden md:block absolute top-12 left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-amber-700/70 z-20 shadow-sm"></div>
                 
-                {/* Mobile circle marker */}
-                <div className="md:hidden absolute left-8 transform -translate-x-1/2 top-8 w-5 h-5 rounded-full bg-amber-800 z-20"></div>
+                {/* Mobile circle marker - moved further left and made smaller */}
+                <div className="md:hidden absolute left-4 transform -translate-x-1/2 top-12 w-3 h-3 rounded-full bg-amber-700/70 z-20 shadow-sm"></div>
                 
                 <Card 
                   className={`overflow-hidden border-2 ${
