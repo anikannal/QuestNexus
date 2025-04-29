@@ -134,11 +134,31 @@ export default function QuestOverview() {
                 key={quest.id} 
                 className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-4rem)] transition-all duration-300`}
               >
-                {/* Circle marker on the path - made smaller and more subtle */}
-                <div className="hidden md:block absolute top-12 left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-amber-700/70 z-20 shadow-sm"></div>
+                {/* The connection line from card to center path - horizontal connector */}
+                <div className="hidden md:block absolute top-12 h-0.5 bg-amber-800/30 z-10" 
+                     style={{ 
+                       width: isEven ? '12%' : '12%', 
+                       left: isEven ? 'auto' : '0', 
+                       right: isEven ? '0' : 'auto' 
+                     }}>
+                </div>
                 
-                {/* Mobile circle marker - moved further left and made smaller */}
-                <div className="md:hidden absolute left-4 transform -translate-x-1/2 top-12 w-3 h-3 rounded-full bg-amber-700/70 z-20 shadow-sm"></div>
+                {/* Circle marker right on top of the path */}
+                <div className="hidden md:block absolute top-12 w-4 h-4 rounded-full bg-amber-700 shadow-sm z-30"
+                     style={{
+                       left: '50%',
+                       transform: 'translateX(-50%)',
+                       marginLeft: '0'
+                     }}>
+                </div>
+                
+                {/* Mobile view circle and connector - positioned on the path */}
+                <div className="md:hidden absolute left-4 top-12 w-3 h-3 rounded-full bg-amber-700 shadow-sm z-30" 
+                     style={{ transform: 'translateX(-50%)' }}>
+                </div>
+                <div className="md:hidden absolute top-12 h-0.5 bg-amber-800/30 z-10" 
+                     style={{ width: '30px', left: '4px' }}>
+                </div>
                 
                 <Card 
                   className={`overflow-hidden border-2 ${
