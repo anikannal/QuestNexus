@@ -124,12 +124,12 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setGameState({...initialGameState});
     console.log("After setting game state");
     try {
-      navigate("/game");
+      navigate("/quests");
     } catch (error) {
       console.error("Navigation failed:", error);
       toast({
         title: "Error",
-        description: "Could not navigate to the game page.",
+        description: "Could not navigate to the quests page.",
         variant: "destructive"
       });
     }
@@ -144,12 +144,12 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         const parsedGame = JSON.parse(savedGame) as GameStateData;
         setGameState(parsedGame);
         try {
-          navigate("/game");
+          navigate("/quests");
         } catch (error) {
           console.error("Navigation failed:", error);
           toast({
             title: "Error",
-            description: "Could not navigate to the game page.",
+            description: "Could not navigate to the quests page.",
             variant: "destructive"
           });
         }
@@ -370,6 +370,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           description: "You have successfully completed the quest.",
           variant: "default"
         });
+
+        // Navigate to quest overview page after completing a quest
+        try {
+          navigate("/quests");
+        } catch (error) {
+          console.error("Failed to navigate to quests page:", error);
+        }
 
         return;
       }
