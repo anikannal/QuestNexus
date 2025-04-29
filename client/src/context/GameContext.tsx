@@ -349,7 +349,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             quests: {
               ...prev.quests,
               completed: [...prev.quests.completed, questId],
-              current: questId, // Keep the quest active instead of setting to null
+              current: null, // Reset to null after quest completion
               available: updatedAvailable
             }
           };
