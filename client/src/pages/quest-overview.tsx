@@ -118,37 +118,7 @@ export default function QuestOverview() {
         {/* Dotted path for mobile view */}
         <div className="md:hidden absolute left-4 top-0 bottom-0 w-1 border-l-2 border-dashed border-amber-800/40 z-10"></div>
         
-        {/* Desktop quest markers on the timeline */}
-        {quests.map((quest, index) => (
-          <div key={`marker-${quest.id}`} 
-               className="hidden md:block absolute w-6 h-6 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
-               style={{ 
-                 left: '50%', 
-                 transform: 'translateX(-50%)',
-                 top: `${120 + (index * 280)}px` 
-               }}>
-            {/* Icon inside desktop marker */}
-            <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-xs font-bold">
-              {isQuestCompleted(quest.id) ? "✓" : index + 1}
-            </div>
-          </div>
-        ))}
-        
-        {/* Mobile quest markers on the timeline */}
-        {quests.map((quest, index) => (
-          <div key={`mobile-marker-${quest.id}`} 
-               className="md:hidden absolute w-5 h-5 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
-               style={{ 
-                 left: '4px', 
-                 transform: 'translateX(-50%)',
-                 top: `${120 + (index * 280)}px` 
-               }}>
-            {/* Icon inside mobile marker */}
-            <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-[10px]">
-              {isQuestCompleted(quest.id) ? "✓" : index + 1}
-            </div>
-          </div>
-        ))}
+        {/* Quest markers will be positioned in the map function */}
         
         <div className="space-y-28 relative"> {/* Increased vertical spacing between quests */}
           {quests.map((quest, index) => {
@@ -166,22 +136,51 @@ export default function QuestOverview() {
                 key={quest.id} 
                 className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-6rem)] transition-all duration-300`}
               >
+                {/* Marker on the vertical timeline for desktop */}
+                <div className="hidden md:block absolute w-6 h-6 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
+                     style={{
+                       left: '50%',
+                       top: '135px', /* Centered vertically on the card */
+                       transform: 'translate(-50%, -50%)',
+                       marginLeft: isEven ? '-57px' : '57px'
+                     }}>
+                  {/* Icon inside desktop marker */}
+                  <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-xs font-bold">
+                    {isQuestCompleted(quest.id) ? "✓" : index + 1}
+                  </div>
+                </div>
+                
                 {/* Desktop horizontal connector line from center timeline to card */}
                 <div className="hidden md:block absolute h-2 bg-amber-800/60 z-20" 
                      style={{ 
-                       top: '15px',
-                       width: isEven ? '58px' : '58px', 
-                       left: isEven ? 'auto' : '-58px', 
-                       right: isEven ? '-58px' : 'auto' 
+                       top: '135px',
+                       width: '56px', 
+                       left: isEven ? 'auto' : '-56px', 
+                       right: isEven ? '-56px' : 'auto',
+                       transform: 'translateY(-50%)'
                      }}>
+                </div>
+                
+                {/* Marker on the vertical timeline for mobile */}
+                <div className="md:hidden absolute w-5 h-5 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
+                     style={{
+                       left: '4px',
+                       top: '135px', /* Centered vertically on the card */
+                       transform: 'translate(-50%, -50%)'
+                     }}>
+                  {/* Icon inside mobile marker */}
+                  <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-[10px]">
+                    {isQuestCompleted(quest.id) ? "✓" : index + 1}
+                  </div>
                 </div>
                 
                 {/* Mobile horizontal connector line */}
                 <div className="md:hidden absolute h-2 bg-amber-800/60 z-20" 
                      style={{ 
-                       top: '15px',
+                       top: '135px',
                        width: '35px', 
-                       left: '-15px'
+                       left: '-15px',
+                       transform: 'translateY(-50%)'
                      }}>
                 </div>
                 
