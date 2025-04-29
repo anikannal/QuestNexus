@@ -199,6 +199,17 @@ export default function PlayerDashboard({ onToggleInventory }: PlayerDashboardPr
           })}
         </div>
       </div>
+      
+      {/* Bottom navigation */}
+      <div className="mt-8 flex justify-center">
+        <Button 
+          variant="outline"
+          onClick={() => navigate("/")}
+          className="border-primary text-primary"
+        >
+          Back to Home
+        </Button>
+      </div>
     </div>
   );
 }

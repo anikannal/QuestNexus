@@ -371,11 +371,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
           variant: "default"
         });
 
-        // Navigate to quest overview page after completing a quest
+        // Navigate to game page with quest overview after completing a quest
         try {
-          navigate("/quests");
+          navigate("/game");
         } catch (error) {
-          console.error("Failed to navigate to quests page:", error);
+          console.error("Failed to navigate to game page with quests:", error);
         }
 
         return;
