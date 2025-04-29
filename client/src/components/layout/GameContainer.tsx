@@ -228,23 +228,7 @@ export default function GameContainer() {
           {renderCurrentScene()}
         </div>
         
-        {/* Reset game and reset quest buttons */}
-        <div className="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-          <Button 
-            onClick={handleResetGame}
-            size="sm"
-            className="bg-blue-600 hover:bg-blue-700 text-xs"
-          >
-            Reset Game
-          </Button>
-          <Button 
-            onClick={handleResetQuest}
-            size="sm"
-            className="bg-green-600 hover:bg-green-700 text-xs"
-          >
-            Reset Quest
-          </Button>
-        </div>
+
       </main>
       
       <Footer />

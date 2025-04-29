@@ -25,28 +25,28 @@ export default function PlayerDashboard({ onToggleInventory }: PlayerDashboardPr
             <h2 className="font-heading text-xl text-primary">
               {player.name} <span className="font-accent text-secondary">• Child of {player.godParent}</span>
             </h2>
-            <div className="flex flex-wrap mt-1">
-              <div className="mr-4">
+            <div className="flex flex-wrap mt-1 w-full sm:w-auto">
+              <div className="mr-4 mb-2 sm:mb-0 w-full sm:w-auto">
                 <span className="text-sm text-stone">Level {player.level}</span>
-                <div className="w-24 bg-stone/20 player-stats-bar mt-1">
+                <div className="w-full sm:w-24 h-3 bg-stone/20 player-stats-bar mt-1 rounded-full overflow-hidden">
                   <div 
                     className="bg-secondary h-full" 
                     style={{ width: `${xpPercentage}%` }}
                   ></div>
                 </div>
               </div>
-              <div className="mr-4">
+              <div className="mr-4 mb-2 sm:mb-0 w-full sm:w-auto">
                 <span className="text-sm text-stone">Health</span>
-                <div className="w-24 bg-stone/20 player-stats-bar mt-1">
+                <div className="w-full sm:w-24 h-3 bg-stone/20 player-stats-bar mt-1 rounded-full overflow-hidden">
                   <div 
                     className="bg-[#4caf50] h-full" 
                     style={{ width: `${healthPercentage}%` }}
                   ></div>
                 </div>
               </div>
-              <div>
+              <div className="w-full sm:w-auto">
                 <span className="text-sm text-stone">Energy</span>
-                <div className="w-24 bg-stone/20 player-stats-bar mt-1">
+                <div className="w-full sm:w-24 h-3 bg-stone/20 player-stats-bar mt-1 rounded-full overflow-hidden">
                   <div 
                     className="bg-accent h-full" 
                     style={{ width: `${energyPercentage}%` }}
