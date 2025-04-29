@@ -24,8 +24,8 @@ export default function Header({ onToggleInventory }: HeaderProps) {
   const handleBackToCamp = () => {
     // Save current progress before navigating
     saveGame();
-    // Navigate to the game page which now shows quest overview
-    navigate("/game");
+    // Navigate to the quests overview page
+    navigate("/quests");
   };
 
   // Check if we're in a quest to show the back button

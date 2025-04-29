@@ -106,10 +106,10 @@ export default function GameContainer() {
       return <InventoryScreen onClose={() => setShowInventory(false)} />;
     }
 
-    // If no quest is selected yet, show the player dashboard with quest selection
+    // If no quest is selected yet, show quest selection screen
     if (gameState.quests.current === null) {
-      console.log("No quest selected, showing player dashboard with quests");
-      return <PlayerDashboard onToggleInventory={toggleInventory} />;
+      console.log("No quest selected, showing quest selection");
+      return <QuestSelection />;
     }
 
     // Check if we have an issue with mismatched quest ID and scene ID
@@ -179,30 +179,20 @@ export default function GameContainer() {
 
     console.log("Quest selected, current scene type:", gameState.currentScene.type);
     
-    // For quest scenes, we need to display the player dashboard and then the scene
-    const renderSceneContent = () => {
-      switch (gameState.currentScene.type) {
-        case "story":
-          return <StoryScene />;
-        case "puzzle":
-          return <PuzzleScene />;
-        case "battle":
-          return <BattleScene />;
-        case "decision":
-          return <DecisionScene />;
-        default:
-          console.log("Unknown scene type, defaulting to quest selection");
-          return <PlayerDashboard onToggleInventory={toggleInventory} />;
-      }
-    };
-    
-    // For quest scenes, wrap the scene with the player dashboard
-    return (
-      <div className="space-y-6">
-        <PlayerDashboard onToggleInventory={toggleInventory} />
-        {renderSceneContent()}
-      </div>
-    );
+    // Otherwise show the appropriate scene type based on current scene
+    switch (gameState.currentScene.type) {
+      case "story":
+        return <StoryScene />;
+      case "puzzle":
+        return <PuzzleScene />;
+      case "battle":
+        return <BattleScene />;
+      case "decision":
+        return <DecisionScene />;
+      default:
+        console.log("Unknown scene type, defaulting to quest selection");
+        return <QuestSelection />;
+    }
   };
 
   // Detect the problematic state where questId is still 0 but quest is selected
@@ -234,6 +224,7 @@ export default function GameContainer() {
         {hasQuestIdError && renderQuestStartError()}
         
         <div id="gameView" className="relative">
+          {gameState.quests.current !== null && <PlayerDashboard onToggleInventory={toggleInventory} />}
           {renderCurrentScene()}
         </div>
         
