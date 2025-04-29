@@ -48,17 +48,8 @@ export default function Home() {
             className="w-full bg-primary hover:bg-primary-light text-white font-heading py-6 text-lg"
             onClick={handleNewGame}
           >
-            Begin New Quest
+            I am ready!
           </Button>
-          
-          {hasSavedGame && (
-            <Button 
-              className="w-full bg-secondary hover:bg-secondary-light text-white font-heading py-6 text-lg"
-              onClick={handleContinue}
-            >
-              Continue Adventure
-            </Button>
-          )}
         </CardFooter>
       </Card>
       

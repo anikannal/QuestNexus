@@ -58,10 +58,10 @@ export default function QuestOverview() {
       };
     } else if (isQuestCompleted(questId)) {
       return {
-        text: "Completed",
-        disabled: true,
-        action: () => {},
-        className: "bg-secondary/70 text-white cursor-not-allowed"
+        text: "Replay Quest",
+        disabled: false,
+        action: () => handleStartQuest(questId),
+        className: "bg-secondary hover:bg-secondary/90 text-white"
       };
     } else if (isQuestAvailable(questId)) {
       return {
