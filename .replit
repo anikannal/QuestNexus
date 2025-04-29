@@ -37,6 +37,24 @@ task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "Preview HTML"
+author = 41753977
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m http.server 3000 --directory client/public"
+
+[[workflows.workflow]]
+name = "Preview Audio Generator"
+author = 41753977
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m http.server 8000 --directory client/public"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
