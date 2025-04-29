@@ -112,11 +112,11 @@ export default function QuestOverview() {
 
       {/* Journey path with quest stops */}
       <div className="w-full max-w-4xl z-10 relative mx-auto">
-        {/* The zigzag path - slightly away from cards */}
-        <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-amber-800/30 transform -translate-x-1/2 z-0 hidden md:block"></div>
+        {/* The zigzag path for desktop */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-amber-800/40 transform -translate-x-1/2 z-10 hidden md:block"></div>
         
-        {/* Dotted path for mobile view - moved further left */}
-        <div className="md:hidden absolute left-4 top-0 bottom-0 w-0.5 border-l border-dashed border-amber-800/30 z-0"></div>
+        {/* Dotted path for mobile view */}
+        <div className="md:hidden absolute left-4 top-0 bottom-0 w-1 border-l-2 border-dashed border-amber-800/40 z-10"></div>
         
         <div className="space-y-28 relative"> {/* Increased vertical spacing between quests */}
           {quests.map((quest, index) => {
@@ -134,30 +134,41 @@ export default function QuestOverview() {
                 key={quest.id} 
                 className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-4rem)] transition-all duration-300`}
               >
-                {/* The connection line from card to center path - horizontal connector */}
-                <div className="hidden md:block absolute top-12 h-0.5 bg-amber-800/30 z-10" 
-                     style={{ 
-                       width: isEven ? '12%' : '12%', 
-                       left: isEven ? 'auto' : '0', 
-                       right: isEven ? '0' : 'auto' 
-                     }}>
-                </div>
-                
-                {/* Circle marker right on top of the path */}
-                <div className="hidden md:block absolute top-12 w-4 h-4 rounded-full bg-amber-700 shadow-sm z-30"
+                {/* Circle marker on the vertical timeline */}
+                <div className="hidden md:block absolute w-5 h-5 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
                      style={{
                        left: '50%',
+                       top: '12px',
                        transform: 'translateX(-50%)',
-                       marginLeft: '0'
                      }}>
                 </div>
                 
-                {/* Mobile view circle and connector - positioned on the path */}
-                <div className="md:hidden absolute left-4 top-12 w-3 h-3 rounded-full bg-amber-700 shadow-sm z-30" 
-                     style={{ transform: 'translateX(-50%)' }}>
+                {/* Horizontal connector line from center timeline to card */}
+                <div className="hidden md:block absolute h-2 bg-amber-800/60 z-20" 
+                     style={{ 
+                       top: '13px',
+                       width: isEven ? '11%' : '11%', 
+                       left: isEven ? '50%' : 'auto', 
+                       right: isEven ? 'auto' : '50%' 
+                     }}>
                 </div>
-                <div className="md:hidden absolute top-12 h-0.5 bg-amber-800/30 z-10" 
-                     style={{ width: '30px', left: '4px' }}>
+                
+                {/* Mobile view circle marker */}
+                <div className="md:hidden absolute w-4 h-4 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-sm z-30" 
+                     style={{ 
+                       left: '4px',
+                       top: '12px',
+                       transform: 'translateX(-50%)'
+                     }}>
+                </div>
+                
+                {/* Mobile view horizontal connector */}
+                <div className="md:hidden absolute h-2 bg-amber-800/60 z-20" 
+                     style={{ 
+                       top: '13px',
+                       width: '30px', 
+                       left: '4px' 
+                     }}>
                 </div>
                 
                 <Card 
