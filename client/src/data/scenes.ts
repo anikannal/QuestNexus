@@ -104,7 +104,7 @@ const scenes = [
         title: "Climb the Mountain Path",
         description: "It's exposed and dangerous, but Annabeth thinks she remembers this route from old legends. It might lead to a back entrance.",
         hint: "This path likely involves combat with creatures guarding the way.",
-        nextScene: "moutain-path"
+        nextScene: "mountain-path"
       }
     ],
     defaultNextScene: "tunnel-riddle"

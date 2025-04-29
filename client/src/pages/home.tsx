@@ -17,11 +17,12 @@ export default function Home() {
 
   const handleContinue = () => {
     loadGame();
+    navigate("/quests");
   };
 
   const handleNewGame = () => {
     initializeNewGame();
-    navigate("/game");
+    navigate("/quests");
   };
 
   return (

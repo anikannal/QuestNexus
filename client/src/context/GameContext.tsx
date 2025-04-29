@@ -99,11 +99,21 @@ interface GameContextProps {
 //  updatePlayerStats: () => {}
 //});
 
-const GameContext = createContext<GameContextProps | null>(null);
+// Create context with default values to avoid null check issues
+const GameContext = createContext<GameContextProps>({
+  gameState: initialGameState,
+  initializeNewGame: () => {},
+  loadGame: () => {},
+  saveGame: () => {},
+  startQuest: () => {},
+  completeScene: () => {},
+  updateSceneProgress: () => {},
+  updatePlayerStats: () => {}
+});
 
 // Provider component
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [gameState, setGameState] = useState<GameStateData | null>(initialGameState);
+  const [gameState, setGameState] = useState<GameStateData>(initialGameState);
   const [location, navigate] = useLocation();
   const { toast } = useToast();
   console.log("GameProvider initialized with gameState:", gameState);
