@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import React from "react";
 import { GameProvider } from "@/context/GameContext";
+import { AudioProvider } from "@/context/AudioContext";
 import Home from "@/pages/home";
 import Game from "@/pages/game";
 import QuestOverview from "@/pages/quest-overview";
@@ -25,12 +26,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <GameProvider children={
-          <>
+        <GameProvider>
+          <AudioProvider>
             <Toaster />
             <Router />
-          </>
-        } /> {/* Wrap the Router with GameProvider */}
+          </AudioProvider>
+        </GameProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

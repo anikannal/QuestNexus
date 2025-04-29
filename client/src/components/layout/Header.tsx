@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/context/GameContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import MusicControls from "./MusicControls";
 
 interface HeaderProps {
   onToggleInventory: () => void;
@@ -49,6 +50,7 @@ export default function Header({ onToggleInventory }: HeaderProps) {
           )}
         </div>
         <div className="flex space-x-4">
+          <MusicControls />
           <Button 
             variant="ghost" 
             className="p-2 rounded hover:bg-primary-light"
