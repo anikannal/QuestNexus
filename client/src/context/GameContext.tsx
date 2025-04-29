@@ -475,10 +475,24 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         updatedPlayer.maxEnergy += 5;
         updatedPlayer.energy = updatedPlayer.maxEnergy;
 
+        // Try to import and use the Audio Context
+        try {
+          const { useAudio } = require('./AudioContext');
+          // This needs to be in a try-catch because it might be called during SSR where there's no context
+          try {
+            const audio = useAudio();
+            audio.playSound('levelUp');
+          } catch (audioError) {
+            console.log('Audio context not available:', audioError);
+          }
+        } catch (importError) {
+          console.log('Could not import audio context:', importError);
+        }
+
         toast({
           title: "Level Up!",
           description: `You are now level ${updatedPlayer.level}. Your health and energy have increased!`,
-          variant: "success"
+          variant: "default"
         });
       }
 

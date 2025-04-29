@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/context/GameContext";
+import { useAudio } from "@/context/AudioContext";
 
 export default function StoryScene() {
   const { gameState, completeScene, updateSceneProgress } = useGameContext();
+  const { playSound } = useAudio();
   const [currentPanel, setCurrentPanel] = useState(1);
   const [scene, setScene] = useState<any>(null);
   
@@ -27,6 +29,7 @@ export default function StoryScene() {
   }
   
   const handlePrevPanel = () => {
+    playSound('click');
     if (currentPanel > 1) {
       const newPanel = currentPanel - 1;
       setCurrentPanel(newPanel);
@@ -36,10 +39,13 @@ export default function StoryScene() {
   
   const handleNextPanel = () => {
     if (currentPanel < scene.panels.length) {
+      playSound('click');
       const newPanel = currentPanel + 1;
       setCurrentPanel(newPanel);
       updateSceneProgress({ currentPanel: newPanel });
     } else {
+      // Play success sound when completing a scene
+      playSound('success');
       // Move to the next scene
       completeScene("success");
     }

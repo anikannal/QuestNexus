@@ -132,24 +132,48 @@ export const AudioProvider = ({ children }: AudioProviderProps) => {
     }
 
     try {
-      const audio = new Audio(musicTracks[musicType as keyof typeof musicTracks] || musicTracks.main);
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined') return;
+      
+      const trackPath = musicTracks[musicType as keyof typeof musicTracks] || musicTracks.main;
+      // Add a cache-busting parameter to avoid browser caching issues during development
+      const audio = new Audio(`${trackPath}?v=${Date.now()}`);
       audio.loop = true;
       audio.volume = volume;
       audio.muted = isMuted;
       
+      // Add event listener for when the file is ready to play
+      audio.addEventListener('canplaythrough', () => {
+        console.log(`Music track ready: ${musicType}`);
+      });
+      
+      // Add error handler for the audio
+      audio.addEventListener('error', (e) => {
+        console.warn(`Music file not found or cannot be played: ${musicType}`, e);
+        // We'll set the current music even if there's an error to maintain state consistency
+        setCurrentMusic(audio);
+      });
+      
+      // Try to play the audio file
       const playPromise = audio.play();
       
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
+            console.log(`Now playing: ${musicType}`);
             setCurrentMusic(audio);
           })
           .catch(error => {
-            console.error("Error playing music:", error);
+            console.log("Browser blocked autoplay or audio file issue:", error);
+            // Still set the current music so we can track its state
+            setCurrentMusic(audio);
           });
+      } else {
+        // If play() didn't return a promise (older browsers)
+        setCurrentMusic(audio);
       }
     } catch (error) {
-      console.error("Error creating audio element:", error);
+      console.log("Error with audio playback:", error);
     }
   };
 
@@ -157,16 +181,26 @@ export const AudioProvider = ({ children }: AudioProviderProps) => {
     if (isMuted) return;
     
     try {
+      // Check if we're in a browser environment
+      if (typeof window === 'undefined') return;
+      
       const soundSrc = soundEffects[type as keyof typeof soundEffects];
       if (!soundSrc) return;
       
-      const audio = new Audio(soundSrc);
+      // Add a cache-busting parameter to avoid browser caching issues
+      const audio = new Audio(`${soundSrc}?v=${Date.now()}`);
       audio.volume = volume;
+      
+      // Add error handler
+      audio.addEventListener('error', (e) => {
+        console.warn(`Sound effect not found or cannot be played: ${type}`, e);
+      });
+      
       audio.play().catch(error => {
-        console.error("Error playing sound effect:", error);
+        console.log("Sound effect playback issue:", error);
       });
     } catch (error) {
-      console.error("Error creating sound effect:", error);
+      console.log("Error with sound effect playback:", error);
     }
   };
 

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Generator for Percy Jackson's Quests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .sound-group {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    p {
+      color: #555;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Audio Generator for Percy Jackson's Quests</h1>
+    
+    <p>This utility helps you generate placeholder sound effects and music for the game. The audio files will be generated using the Web Audio API and can be saved for use in the game.</p>
+    
+    <div class="sound-group">
+      <h2>Sound Effects</h2>
+      
+      <div>
+        <button onclick="generateAndPlay('click', 'click')">Click Sound</button>
+        <button onclick="generateAndPlay('success', 'success')">Success Sound</button>
+        <button onclick="generateAndPlay('fail', 'fail')">Fail Sound</button>
+        <button onclick="generateAndPlay('levelUp', 'level-up')">Level Up Sound</button>
+        <button onclick="generateAndPlay('damage', 'damage')">Damage Sound</button>
+      </div>
+      
+      <div class="controls">
+        <button onclick="stopAllSounds()">Stop All Sounds</button>
+      </div>
+    </div>
+    
+    <div class="sound-group">
+      <h2>Music Tracks</h2>
+      
+      <div>
+        <button onclick="generateAndPlayMusic('main', 'main-theme')">Main Theme</button>
+        <button onclick="generateAndPlayMusic('camp', 'camp-halfblood')">Camp Half-Blood</button>
+        <button onclick="generateAndPlayMusic('battle', 'battle')">Battle Music</button>
+        <button onclick="generateAndPlayMusic('puzzle', 'puzzle')">Puzzle Music</button>
+        <button onclick="generateAndPlayMusic('victory', 'victory')">Victory Music</button>
+        <button onclick="generateAndPlayMusic('story', 'story')">Story Music</button>
+      </div>
+      
+      <div class="controls">
+        <button onclick="stopAllMusic()">Stop All Music</button>
+      </div>
+    </div>
+    
+    <div>
+      <h2>Instructions</h2>
+      <p>Click on any button above to generate and play the corresponding sound. To save the generated sound:</p>
+      <ol>
+        <li>Click a sound button to generate and play the sound</li>
+        <li>After hearing the sound, click the "Download" button that appears</li>
+        <li>Save the file to the appropriate directory:
+          <ul>
+            <li>Sound effects should go in: <code>/public/sounds/</code></li>
+            <li>Music tracks should go in: <code>/public/music/</code></li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+  
+  <script>
+    let audioContext;
+    let currentSound = null;
+    let currentMusic = null;
+    
+    // Initialize the AudioContext when user interacts with the page
+    function initAudioContext() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    
+    // Generate different sound effects based on type
+    function generateAndPlay(type, filename) {
+      initAudioContext();
+      
+      if (currentSound) {
+        currentSound.stop();
+      }
+      
+      let oscillator = audioContext.createOscillator();
+      let gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      switch(type) {
+        case 'click': 
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.1);
+          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.1);
+          break;
+          
+        case 'success':
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.1);
+          oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.3);
+          break;
+          
+        case 'fail':
+          oscillator.type = 'sawtooth';
+          oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.3);
+          gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.3);
+          break;
+          
+        case 'levelUp':
+          // Level up is a more complex sound with multiple oscillators
+          let osc1 = audioContext.createOscillator();
+          let osc2 = audioContext.createOscillator();
+          let gain1 = audioContext.createGain();
+          let gain2 = audioContext.createGain();
+          
+          osc1.connect(gain1);
+          osc2.connect(gain2);
+          gain1.connect(audioContext.destination);
+          gain2.connect(audioContext.destination);
+          
+          osc1.type = 'sine';
+          osc2.type = 'triangle';
+          
+          // First tone
+          osc1.frequency.setValueAtTime(440, audioContext.currentTime);
+          osc1.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.2);
+          gain1.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          
+          // Second tone (starts slightly after)
+          osc2.frequency.setValueAtTime(587.33, audioContext.currentTime + 0.1);
+          osc2.frequency.exponentialRampToValueAtTime(1174.66, audioContext.currentTime + 0.3);
+          gain2.gain.setValueAtTime(0.0, audioContext.currentTime);
+          gain2.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.1);
+          gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+          
+          osc1.start();
+          osc2.start();
+          osc1.stop(audioContext.currentTime + 0.4);
+          osc2.stop(audioContext.currentTime + 0.4);
+          break;
+          
+        case 'damage':
+          oscillator.type = 'square';
+          oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.2);
+          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.2);
+          break;
+      }
+      
+      // Remember the current sound to stop it if needed
+      currentSound = oscillator;
+      
+      // Set up option to download
+      createDownloadButton(type, filename, 'sound');
+    }
+    
+    // Generate different music based on type
+    function generateAndPlayMusic(type, filename) {
+      initAudioContext();
+      
+      if (currentMusic) {
+        currentMusic.stop();
+      }
+      
+      let melody = [];
+      let noteDuration = 0.3; 
+      let now = audioContext.currentTime;
+      
+      // Set up different melodies for different music types
+      switch(type) {
+        case 'main': 
+          melody = [
+            { note: 'C4', time: now },
+            { note: 'E4', time: now + noteDuration },
+            { note: 'G4', time: now + noteDuration * 2 },
+            { note: 'C5', time: now + noteDuration * 3 },
+            { note: 'G4', time: now + noteDuration * 4 },
+            { note: 'E4', time: now + noteDuration * 5 },
+            { note: 'C4', time: now + noteDuration * 6 }
+          ];
+          break;
+          
+        case 'camp':
+          melody = [
+            { note: 'G4', time: now },
+            { note: 'A4', time: now + noteDuration },
+            { note: 'B4', time: now + noteDuration * 2 },
+            { note: 'D5', time: now + noteDuration * 3 },
+            { note: 'B4', time: now + noteDuration * 4 },
+            { note: 'G4', time: now + noteDuration * 5 }
+          ];
+          break;
+          
+        case 'battle':
+          melody = [
+            { note: 'C4', time: now },
+            { note: 'C4', time: now + noteDuration * 0.5 },
+            { note: 'G4', time: now + noteDuration },
+            { note: 'G4', time: now + noteDuration * 1.5 },
+            { note: 'F4', time: now + noteDuration * 2 },
+            { note: 'E4', time: now + noteDuration * 2.5 },
+            { note: 'D4', time: now + noteDuration * 3 },
+            { note: 'C4', time: now + noteDuration * 3.5 }
+          ];
+          break;
+          
+        case 'puzzle':
+          melody = [
+            { note: 'E4', time: now },
+            { note: 'D4', time: now + noteDuration },
+            { note: 'C4', time: now + noteDuration * 2 },
+            { note: 'D4', time: now + noteDuration * 3 },
+            { note: 'E4', time: now + noteDuration * 4 },
+            { note: 'E4', time: now + noteDuration * 5 },
+            { note: 'E4', time: now + noteDuration * 6 }
+          ];
+          break;
+          
+        case 'victory':
+          melody = [
+            { note: 'C4', time: now },
+            { note: 'E4', time: now + noteDuration * 0.5 },
+            { note: 'G4', time: now + noteDuration },
+            { note: 'C5', time: now + noteDuration * 1.5 },
+            { note: 'E5', time: now + noteDuration * 2 },
+            { note: 'G5', time: now + noteDuration * 2.5 },
+            { note: 'C6', time: now + noteDuration * 3 }
+          ];
+          break;
+          
+        case 'story':
+          melody = [
+            { note: 'A4', time: now },
+            { note: 'C5', time: now + noteDuration },
+            { note: 'E5', time: now + noteDuration * 2 },
+            { note: 'A5', time: now + noteDuration * 3 },
+            { note: 'G5', time: now + noteDuration * 4 },
+            { note: 'E5', time: now + noteDuration * 5 },
+            { note: 'C5', time: now + noteDuration * 6 }
+          ];
+          break;
+      }
+      
+      let stopTime = now;
+      
+      // Play all notes in the melody
+      for (let note of melody) {
+        playNote(note.note, note.time, noteDuration);
+        if (note.time + noteDuration > stopTime) {
+          stopTime = note.time + noteDuration;
+        }
+      }
+      
+      // Set up option to download
+      createDownloadButton(type, filename, 'music');
+    }
+    
+    // Convert note name to frequency
+    function getNoteFrequency(note) {
+      const notes = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+      const match = note.match(/([A-G]#?)(\d+)/);
+      
+      if (!match) {
+        return 440; // Default to A4
+      }
+      
+      const noteName = match[1];
+      const octave = parseInt(match[2]);
+      
+      // A4 = 440Hz
+      const semitoneFromA4 = (octave - 4) * 12 + notes[noteName] - notes['A'];
+      return 440 * Math.pow(2, semitoneFromA4 / 12);
+    }
+    
+    // Play a note with the given name, start time, and duration
+    function playNote(noteName, startTime, duration) {
+      const frequency = getNoteFrequency(noteName);
+      
+      let oscillator = audioContext.createOscillator();
+      let gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.value = frequency;
+      
+      gainNode.gain.setValueAtTime(0.1, startTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.05, startTime + duration * 0.8);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+      
+      oscillator.start(startTime);
+      oscillator.stop(startTime + duration);
+      
+      // Remember the current music to stop it if needed
+      currentMusic = oscillator;
+    }
+    
+    // Stop all sounds
+    function stopAllSounds() {
+      if (currentSound) {
+        currentSound.stop();
+        currentSound = null;
+      }
+    }
+    
+    // Stop all music
+    function stopAllMusic() {
+      if (currentMusic) {
+        currentMusic.stop();
+        currentMusic = null;
+      }
+    }
+    
+    // Create a download button for the generated audio
+    function createDownloadButton(type, filename, category) {
+      // We'll implement this in a real environment with actual audio recording
+      console.log(`Would create download for ${category}: ${filename}.mp3`);
+    }
+    
+    // Add event listener to initialize audio context on first interaction
+    document.addEventListener('click', function initAudio() {
+      initAudioContext();
+      document.removeEventListener('click', initAudio);
+    });
+  </script>
+</body>
+</html>
