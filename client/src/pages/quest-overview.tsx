@@ -51,291 +51,105 @@ export default function QuestOverview() {
   const getQuestButtonProps = (questId: number) => {
     if (isQuestInProgress(questId)) {
       return {
-        text: "Continue Journey",
+        text: "Continue Quest",
         disabled: false,
         action: () => handleContinueQuest(),
-        className: "bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
+        className: "bg-accent hover:bg-accent/90 text-white"
       };
     } else if (isQuestCompleted(questId)) {
       return {
-        text: "Travel Again",
+        text: "Replay Quest",
         disabled: false,
         action: () => handleStartQuest(questId),
-        className: "bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2"
+        className: "bg-secondary hover:bg-secondary/90 text-white"
       };
     } else if (isQuestAvailable(questId)) {
       return {
-        text: "Begin Adventure",
+        text: "Start Quest",
         disabled: false,
         action: () => handleStartQuest(questId),
-        className: "bg-amber-700 hover:bg-amber-800 text-white flex items-center justify-center gap-2"
+        className: "bg-primary hover:bg-primary/90 text-white"
       };
     } else {
       return {
-        text: "Path Blocked",
+        text: "Locked",
         disabled: true,
         action: () => {},
-        className: "bg-gray-400 text-white cursor-not-allowed flex items-center justify-center gap-2"
+        className: "bg-gray-400 text-white cursor-not-allowed"
       };
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 bg-amber-50 relative">
-      {/* Background texture - faded old map with subtle pattern */}
-      <div 
-        className="absolute inset-0 z-0 bg-amber-50"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle, transparent 20%, rgba(246, 224, 194, 0.6) 20%, rgba(246, 224, 194, 0.6) 80%, transparent 80%, transparent),
-            radial-gradient(circle, transparent 20%, rgba(246, 224, 194, 0.6) 20%, rgba(246, 224, 194, 0.6) 80%, transparent 80%, transparent)
-          `,
-          backgroundPosition: `0 0, 50px 50px`,
-          backgroundSize: `100px 100px`,
-          opacity: 0.3
-        }}
-      ></div>
-      
-      {/* Subtle paper texture overlay */}
-      <div 
-        className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
-        style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundSize: '200px 200px',
-        }}
-      ></div>
-      
-      <div className="z-10 text-center mb-8 bg-amber-100/80 p-5 rounded-lg border-2 border-amber-900/20 shadow-md backdrop-blur-sm">
-        <h1 className="text-3xl font-heading text-amber-900 mb-2">The Journey Ahead</h1>
-        <p className="text-amber-800 font-accent">Follow the path on this ancient map to discover your destiny</p>
+    <div className="container mx-auto px-4 py-8">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-heading text-primary mb-2">Quests at Camp Half-Blood</h1>
+        <p className="text-stone font-accent">Choose your next adventure from the available quests below</p>
       </div>
 
-      {/* Journey path with quest stops */}
-      <div className="w-full max-w-4xl z-10 relative mx-auto">
-        {/* The zigzag path for desktop */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-amber-800/40 transform -translate-x-1/2 z-10 hidden md:block"></div>
-        
-        {/* Dotted path for mobile view */}
-        <div className="md:hidden absolute left-4 top-0 bottom-0 w-1 border-l-2 border-dashed border-amber-800/40 z-10"></div>
-        
-        {/* Quest markers will be positioned in the map function */}
-        
-        <div className="space-y-28 relative"> {/* Increased vertical spacing between quests */}
-          {quests.map((quest, index) => {
-            const buttonProps = getQuestButtonProps(quest.id);
-            const questState = gameState.quests.available.find(q => q.id === quest.id);
-            const isEven = index % 2 === 0;
-            
-            // Different positions for desktop zigzag effect with much more spacing
-            const positionClasses = isEven 
-              ? "md:ml-auto md:mr-24 md:text-right" 
-              : "md:mr-auto md:ml-24 md:text-left";
-            
-            return (
-              <div 
-                key={quest.id} 
-                className={`flex flex-col relative ${positionClasses} w-full md:w-[calc(50%-6rem)] transition-all duration-300`}
-              >
-                {/* Marker on the vertical timeline for desktop */}
-                <div className="hidden md:block absolute w-6 h-6 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
-                     style={{
-                       left: '50%',
-                       top: '135px', /* Centered vertically on the card */
-                       transform: 'translate(-50%, -50%)',
-                       marginLeft: isEven ? '-57px' : '57px'
-                     }}>
-                  {/* Icon inside desktop marker */}
-                  <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-xs font-bold">
-                    {isQuestCompleted(quest.id) ? "✓" : index + 1}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {quests.map((quest) => {
+          const buttonProps = getQuestButtonProps(quest.id);
+          const questState = gameState.quests.available.find(q => q.id === quest.id);
+          
+          return (
+            <Card key={quest.id} className="overflow-hidden border-2 border-stone/20 hover:shadow-lg transition-shadow">
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-xl font-heading text-primary">{quest.title}</CardTitle>
+                  {isQuestInProgress(quest.id) && (
+                    <Badge variant="outline" className="bg-accent/20 border-accent text-accent">
+                      In Progress
+                    </Badge>
+                  )}
+                  {isQuestCompleted(quest.id) && (
+                    <Badge variant="outline" className="bg-secondary/20 border-secondary text-secondary">
+                      Completed
+                    </Badge>
+                  )}
+                  {!isQuestInProgress(quest.id) && !isQuestCompleted(quest.id) && questState?.status === "locked" && (
+                    <Badge variant="outline" className="bg-gray-200 border-gray-400 text-gray-600">
+                      Locked
+                    </Badge>
+                  )}
+                </div>
+                <CardDescription className="text-stone mt-1">
+                  Recommended Level: {quest.recommendedLevel} | Time: {quest.estimatedTime}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="py-4">
+                <p className="text-stone mb-4">{quest.description}</p>
+                
+                {questState?.status === "locked" && quest.requiredQuestTitle && (
+                  <div className="bg-stone/10 rounded p-2 text-sm mb-2">
+                    <span className="material-icons text-warning inline-block mr-1" style={{ fontSize: "16px" }}>lock</span>
+                    <span>Complete "{quest.requiredQuestTitle}" to unlock</span>
                   </div>
-                </div>
-                
-                {/* Desktop horizontal connector line from center timeline to card */}
-                <div className="hidden md:block absolute h-2 bg-amber-800/60 z-20" 
-                     style={{ 
-                       top: '135px',
-                       width: '56px', 
-                       left: isEven ? 'auto' : '-56px', 
-                       right: isEven ? '-56px' : 'auto',
-                       transform: 'translateY(-50%)'
-                     }}>
-                </div>
-                
-                {/* Marker on the vertical timeline for mobile */}
-                <div className="md:hidden absolute w-5 h-5 rounded-full bg-amber-800 border-2 border-amber-100/80 shadow-md z-30"
-                     style={{
-                       left: '4px',
-                       top: '135px', /* Centered vertically on the card */
-                       transform: 'translate(-50%, -50%)'
-                     }}>
-                  {/* Icon inside mobile marker */}
-                  <div className="absolute inset-0 flex items-center justify-center text-amber-100 text-[10px]">
-                    {isQuestCompleted(quest.id) ? "✓" : index + 1}
-                  </div>
-                </div>
-                
-                {/* Mobile horizontal connector line */}
-                <div className="md:hidden absolute h-2 bg-amber-800/60 z-20" 
-                     style={{ 
-                       top: '135px',
-                       width: '35px', 
-                       left: '-15px',
-                       transform: 'translateY(-50%)'
-                     }}>
-                </div>
-                
-                <Card 
-                  className={`overflow-hidden border-2 ${
-                    isQuestCompleted(quest.id) 
-                      ? "border-green-800/30 bg-green-50/80" 
-                      : isQuestInProgress(quest.id) 
-                        ? "border-blue-800/30 bg-blue-50/80" 
-                        : questState?.status === "locked" 
-                          ? "border-gray-400/30 bg-gray-100/80" 
-                          : "border-amber-800/30 bg-amber-100/80"
-                  } hover:shadow-xl transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-1`}
+                )}
+              </CardContent>
+              
+              <CardFooter className="bg-stone/5 pt-2">
+                <Button 
+                  className={`w-full ${buttonProps.className}`}
+                  disabled={buttonProps.disabled}
+                  onClick={buttonProps.action}
                 >
-                  <CardHeader className={`${
-                    isQuestCompleted(quest.id) 
-                      ? "bg-green-100/60" 
-                      : isQuestInProgress(quest.id) 
-                        ? "bg-blue-100/60" 
-                        : questState?.status === "locked" 
-                          ? "bg-gray-200/60" 
-                          : "bg-amber-200/60"
-                  } pb-2 relative overflow-hidden`}>
-                    
-                    {/* Map icon in the background */}
-                    <div className="absolute right-3 top-3 opacity-10 text-amber-900">
-                      <span className="material-icons text-5xl">
-                        {isQuestCompleted(quest.id) 
-                          ? "check_circle"
-                          : isQuestInProgress(quest.id) 
-                            ? "explore" 
-                            : questState?.status === "locked"
-                              ? "lock"
-                              : "place"}
-                      </span>
-                    </div>
-                    
-                    <div className="flex justify-between items-start">
-                      <CardTitle className={`text-xl font-heading ${
-                        isQuestCompleted(quest.id) 
-                          ? "text-green-800" 
-                          : isQuestInProgress(quest.id) 
-                            ? "text-blue-800" 
-                            : questState?.status === "locked" 
-                              ? "text-gray-500" 
-                              : "text-amber-900"
-                      }`}>
-                        {quest.title}
-                      </CardTitle>
-                      
-                      {isQuestInProgress(quest.id) && (
-                        <Badge variant="outline" className="bg-blue-100 border-blue-500 text-blue-800">
-                          <span className="material-icons text-xs mr-1">sailing</span> In Progress
-                        </Badge>
-                      )}
-                      {isQuestCompleted(quest.id) && (
-                        <Badge variant="outline" className="bg-green-100 border-green-500 text-green-800">
-                          <span className="material-icons text-xs mr-1">verified</span> Completed
-                        </Badge>
-                      )}
-                      {!isQuestInProgress(quest.id) && !isQuestCompleted(quest.id) && questState?.status === "locked" && (
-                        <Badge variant="outline" className="bg-gray-200 border-gray-400 text-gray-600">
-                          <span className="material-icons text-xs mr-1">lock</span> Locked
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <CardDescription className={`mt-1 ${
-                      isQuestCompleted(quest.id) 
-                        ? "text-green-700" 
-                        : isQuestInProgress(quest.id) 
-                          ? "text-blue-700" 
-                          : questState?.status === "locked" 
-                            ? "text-gray-500" 
-                            : "text-amber-800"
-                    }`}>
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                          <span className="material-icons text-sm mr-1">fitness_center</span>
-                          <span>Level {quest.recommendedLevel}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className="material-icons text-sm mr-1">hourglass_bottom</span>
-                          <span>{quest.estimatedTime}</span>
-                        </div>
-                      </div>
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="py-4">
-                    <p className={`mb-4 ${
-                      isQuestCompleted(quest.id) 
-                        ? "text-green-800" 
-                        : isQuestInProgress(quest.id) 
-                          ? "text-blue-800" 
-                          : questState?.status === "locked" 
-                            ? "text-gray-500" 
-                            : "text-amber-900"
-                    }`}>
-                      {quest.description}
-                    </p>
-                    
-                    {questState?.status === "locked" && quest.requiredQuestTitle && (
-                      <div className="bg-amber-50 rounded p-3 text-sm mb-2 border border-amber-200">
-                        <div className="flex items-center text-amber-800">
-                          <span className="material-icons text-amber-600 mr-2">route</span>
-                          <span>You must complete "{quest.requiredQuestTitle}" before traveling here</span>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                  
-                  <CardFooter className={`pt-2 ${
-                    isQuestCompleted(quest.id) 
-                      ? "bg-green-100/40" 
-                      : isQuestInProgress(quest.id) 
-                        ? "bg-blue-100/40" 
-                        : questState?.status === "locked" 
-                          ? "bg-gray-100/40" 
-                          : "bg-amber-100/40"
-                  }`}>
-                    <Button 
-                      className={`w-full ${buttonProps.className} ${
-                        questState?.status === "locked" ? "" : "hover:shadow-lg transition-shadow"
-                      }`}
-                      disabled={buttonProps.disabled}
-                      onClick={buttonProps.action}
-                    >
-                      <span className="material-icons text-base">
-                        {isQuestCompleted(quest.id) 
-                          ? "replay"
-                          : isQuestInProgress(quest.id) 
-                            ? "directions_boat" 
-                            : questState?.status === "locked"
-                              ? "block"
-                              : "hiking"}
-                      </span>
-                      {buttonProps.text}
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            );
-          })}
-        </div>
+                  {buttonProps.text}
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
       
-      <div className="mt-12 mb-8 z-10">
+      <div className="mt-8 flex justify-center">
         <Button 
           variant="outline"
           onClick={() => navigate("/")}
-          className="border-amber-900 text-amber-900 hover:bg-amber-100"
+          className="border-primary text-primary"
         >
-          <span className="material-icons mr-2 text-base">arrow_back</span>
-          Return to Camp
+          Back to Home
         </Button>
       </div>
     </div>
