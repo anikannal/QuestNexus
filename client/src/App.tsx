@@ -8,14 +8,12 @@ import React from "react";
 import { GameProvider } from "@/context/GameContext";
 import Home from "@/pages/home";
 import Game from "@/pages/game";
-import QuestOverview from "@/pages/quest-overview";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/game" component={Game} />
-      <Route path="/quests" component={QuestOverview} />
       <Route component={NotFound} />
     </Switch>
   );
